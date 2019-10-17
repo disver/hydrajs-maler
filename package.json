@@ -1,0 +1,24 @@
+{
+  "name": "@hydrajs/maler",
+  "version": "1.0.0",
+  "scripts": {
+    "build:cmjs": "tsc -P tsconfig.json --target ES5 --module COMMONJS --outDir dist",
+    "build:es6": "tsc -P tsconfig.json --target ES6 --module ES6 --outDir dist",
+    "build": "npm run build:cmjs",
+    "test": "jest"
+  },
+  "description": "A Javascript library for working with Canvas.",
+  "main": "index.js",
+  "repository": "https://github.com/disver/hydrajs-maler.git",
+  "author": "DISVER",
+  "license": "MIT",
+  "devDependencies": {
+    "jest-canvas-mock": "^2.1.2",
+    "tslint": "^5.20.0",
+    "@types/jest": "^24.0.6",
+    "jest": "^24.1.0",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.6.4"
+  },
+  "dependencies": {}
+}

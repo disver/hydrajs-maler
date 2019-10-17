@@ -1,0 +1,58 @@
+extends: "tslint:recommended"
+rulesDirectory:
+- core/
+rules:
+  semicolon:
+    - true
+    - never
+  no-var-keyword: true
+  no-require-imports: true
+  no-debugger: true
+  no-use-before-declare: true
+  curly: true
+  no-floating-promises: true
+  no-inferred-empty-object-type: true
+  only-arrow-functions:
+    - true
+    - allow-declarations
+    - allow-named-functions
+  max-line-length:
+    options: [120]
+  new-parens: true
+  no-invalid-template-strings: true
+  space-before-function-paren: true
+  cyclomatic-complexity:
+    - true
+    - 50
+  no-reference-import: true
+  no-duplicate-imports: true
+  no-redundant-jsdoc: true
+  variable-name: false
+  no-eval: true
+  no-console: false
+  no-duplicate-variable: true
+  no-irregular-whitespace: true
+  no-string-throw: true
+  deprecation: true
+  import-spacing: true
+  encoding: true
+  no-consecutive-blank-lines:
+    - true
+    - 3
+  trailing-comma: false
+  interface-name: false
+  one-variable-per-declaration: true
+  object-literal-shorthand: true
+  no-unused-variable: true
+  no-unsafe-finally: true
+  one-line: true
+  comment-format:
+    - true
+    - check-space
+    - check-lowercase
+  quotemark:
+    - true
+    - single
+    - jsx-double
+    - avoid-template
+    - avoid-escape
