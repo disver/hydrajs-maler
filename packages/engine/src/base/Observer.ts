@@ -1,6 +1,6 @@
 interface Observer {
-    handler: (() => void) | null
-    onChanged (h: () => void): void
+    notify (): void
+    initialize (): void
 }
 
 export default Observer

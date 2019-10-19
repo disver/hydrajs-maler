@@ -27,6 +27,12 @@
         console.log(e.name)
     })
 
+    setInterval(() => {
+        view.position.x++
+        view.width++
+        view.height++
+    }, 100)
+
 
     hydra
         .attach(view)
