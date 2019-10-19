@@ -8,14 +8,14 @@ class View implements Drawable, EventReceiver{
     private _height: number
     private _position: Position
 
-    // margin start
+    // margin register
     private _marginTop: number
     private _marginRight: number
     private _marginBottom: number
     private _marginLeft: number
     // margin end
 
-    // padding start
+    // padding register
     private _paddingTop: number
     private _paddingRight: number
     private _paddingBottom: number
@@ -50,7 +50,7 @@ class View implements Drawable, EventReceiver{
     }
 
 
-    public addEventListener (name: string, handler: () => void): void {
+    public addEventListener (name: string, handler: (event: Event) => void): void {
         this._registeredEvents.set(name, handler)
     }
 

@@ -1,9 +1,11 @@
+import Event from '../event/Event'
+
 interface Drawable {
     /**
      * add event name to listen
      * and handle when event appear
      */
-    addEventListener (name: string, handler: () => void): void
+    addEventListener (name: string, handler: (event: Event) => void): void
 
     /**
      *  render view
