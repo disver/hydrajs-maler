@@ -1,17 +1,25 @@
-import View from '../view/View'
-import HydraRenderer from './HydraRenderer'
+import HydraRenderer from '../../core/src/renderer/HydraRenderer'
+import View from '../../core/src/view/View'
+import EventDispatcher from './base/EventDispatcher'
+import HydraEventDispatcher from './HydraEventDispatcher'
 
+/**
+ * @author 4everlynn
+ */
 class Hydra {
     private readonly _views: View[]
     private _renderer: HydraRenderer
-    private _canvas: HTMLCanvasElement
+    private readonly _canvas: HTMLCanvasElement
+    private _dispatcher: EventDispatcher
 
-    constructor (element: HTMLDivElement | HTMLCanvasElement) {
+    constructor (element: HTMLElement | HTMLCanvasElement) {
         let canvas: HTMLCanvasElement | null = null
         if (element instanceof HTMLCanvasElement) {
             canvas = element
-        } else if (element instanceof HTMLElement) {
+        } else if (element instanceof HTMLDivElement) {
             canvas = document.createElement('canvas')
+            canvas.width = element.offsetWidth
+            canvas.height = element.offsetHeight
             element.appendChild(canvas)
         } else {
             throw new Error('parameter element cloud only be HTMLDivElement or HTMLCanvasElement')
@@ -22,6 +30,7 @@ class Hydra {
         this._canvas = canvas
         this._renderer = new HydraRenderer(this._canvas.getContext('2d'))
         this._views = []
+        this._dispatcher = new HydraEventDispatcher(this._canvas, this._views)
     }
 
     /**
@@ -31,6 +40,8 @@ class Hydra {
         this._views.push(view)
         return this
     }
+
+
 
     /**
      * render components

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hydra.js</title>
+
+</head>
+<body>
+<div id="root" style="width: 300px;height: 300px;"></div>
+<canvas id="ca" width="600" height="600" style="width: 300px;height: 300px;"></canvas>
+</body>
+<script src="../dist/bundle/hydra.es.js"></script>
+<script>
+    let hydra = new window.Hydra(document.getElementById('root'))
+    let view = new window.View()
+    view.width = 150
+    view.height = 150
+    view.background = 'red'
+    view.addEventListener('click', e => {
+        console.log(e.trigger)
+    })
+
+    hydra
+        .attach(view)
+        .render()
+</script>
+</html>

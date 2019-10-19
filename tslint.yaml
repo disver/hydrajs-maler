@@ -1,6 +1,6 @@
 extends: "tslint:recommended"
 rulesDirectory:
-- core/
+- /
 rules:
   semicolon:
     - true
@@ -12,6 +12,7 @@ rules:
   curly: true
   no-floating-promises: true
   no-inferred-empty-object-type: true
+  arrow-parens: false
   only-arrow-functions:
     - true
     - allow-declarations
@@ -25,6 +26,7 @@ rules:
     - true
     - 50
   no-reference-import: true
+  object-literal-sort-keys: false
   no-duplicate-imports: true
   no-redundant-jsdoc: true
   variable-name: false
@@ -44,6 +46,7 @@ rules:
   one-variable-per-declaration: true
   object-literal-shorthand: true
   no-unused-variable: true
+  no-unused-expression: false
   no-unsafe-finally: true
   one-line: true
   comment-format:

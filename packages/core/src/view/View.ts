@@ -1,7 +1,9 @@
+import Event from '../event/Event'
+import EventReceiver from '../event/EventReceiver'
 import Drawable from './Drawable'
 import Position from './Position'
 
-class View implements Drawable {
+class View implements Drawable, EventReceiver{
     private _width: number
     private _height: number
     private _position: Position
@@ -21,16 +23,16 @@ class View implements Drawable {
     // padding end
 
     // background of view
-    private _background: string | number
+    private _background: string
 
     // z index
     private _zIndex: number
 
     // map to resolve if should view should response when specific event appear
-    private _registeredEvents: Map<string, Event>
+    private _registeredEvents: Map<string, (event: Event) => void>
 
 
-    constructor () {
+   protected constructor () {
         this._width = 0
         this._height = 0
         this._background = 'black'
@@ -44,15 +46,38 @@ class View implements Drawable {
         this._paddingBottom = 0
         this._paddingLeft = 0
         this._zIndex = 0
-        this._registeredEvents = new Map<string, Event>()
+        this._registeredEvents = new Map<string, () => void>()
     }
 
 
-    public addEventListener (name: string, handler: () => void): any {
+    public addEventListener (name: string, handler: () => void): void {
+        this._registeredEvents.set(name, handler)
     }
 
 
     public render (context: CanvasRenderingContext2D | null | undefined) {
+        if (context instanceof CanvasRenderingContext2D) {
+            context.fillStyle = this._background
+            context.fillRect(this._position.x, this._position.y, this._width, this._height)
+        }
+    }
+
+
+    public receive (event: Event): void {
+        if (this.trigger(event)) {
+           const handler = this._registeredEvents.get(event.trigger)
+           if (handler) {
+               handler(event)
+           }
+        }
+    }
+
+    public trigger (event: Event): boolean {
+        // if view has registered event
+        if (this._registeredEvents.get(event.trigger)) {
+           return true
+        }
+        return false
     }
 
     get width (): number {
@@ -143,11 +168,11 @@ class View implements Drawable {
         this._paddingLeft = value
     }
 
-    get background (): string | number {
+    get background (): string {
         return this._background
     }
 
-    set background (value: string | number) {
+    set background (value: string) {
         this._background = value
     }
 
