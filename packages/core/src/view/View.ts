@@ -65,7 +65,7 @@ class View implements Drawable, EventReceiver{
 
     public receive (event: Event): void {
         if (this.trigger(event)) {
-           const handler = this._registeredEvents.get(event.trigger)
+           const handler = this._registeredEvents.get(event.name)
            if (handler) {
                handler(event)
            }
@@ -74,8 +74,17 @@ class View implements Drawable, EventReceiver{
 
     public trigger (event: Event): boolean {
         // if view has registered event
-        if (this._registeredEvents.get(event.trigger)) {
-           return true
+        if (this._registeredEvents.get(event.name)) {
+            const mouseX = event.position.x
+            const mouseY = event.position.y
+
+            const viewX = this.position.x
+            const viewY = this.position.y
+
+            if ((mouseX >= viewX || mouseX <= viewX + this.width)
+                && (mouseY >= viewY || mouseY <= viewY + this.height)) {
+                return true
+            }
         }
         return false
     }

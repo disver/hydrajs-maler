@@ -1,12 +1,12 @@
 import Position from '../view/Position'
 
 class Event {
-    private readonly _trigger: string
+    private readonly _name: string
     private _position: Position
     private _button: number
 
-    constructor (trigger: string) {
-        this._trigger = trigger
+    constructor (name: string) {
+        this._name = name
         this._position = new Position()
         this._button = -1
     }
@@ -28,8 +28,8 @@ class Event {
         this._position = value
     }
 
-    get trigger (): string {
-        return this._trigger
+    get name (): string {
+        return this._name
     }
 }
 
