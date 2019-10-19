@@ -1,4 +1,4 @@
-import Position from './Position'
+import Position from './base/Position'
 import View from './View'
 
 export {

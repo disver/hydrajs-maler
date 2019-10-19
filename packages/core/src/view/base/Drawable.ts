@@ -1,4 +1,4 @@
-import Event from '../event/Event'
+import Event from '../../event/Event'
 
 interface Drawable {
     /**
@@ -11,6 +11,13 @@ interface Drawable {
      *  render view
      */
     render (context: CanvasRenderingContext2D | null | undefined): void
+
+    onMove (event: Event): void
+
+    onMouseDown (event: Event): void
+
+    onMouseUp (event: Event): void
+
 }
 
 export default Drawable

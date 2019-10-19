@@ -1,3 +1,4 @@
+import Hydra from '../../../engine/src/Hydra'
 import View from '../view/View'
 import Renderer from './Renderer'
 
@@ -11,8 +12,18 @@ class HydraRenderer implements Renderer {
     /**
      * call view's render function and support context2D for view
      */
-    public render (view: View) {
+    public render (view: View, parent: Hydra) {
         view.render(this.getContext())
+        view.parent = parent
+        view.propertyChanged(() => {
+            if (view.parent) {
+                if (view.parent instanceof Hydra) {
+                    view.parent.render()
+                }
+            } else {
+                view.render(this.getContext())
+            }
+        })
     }
 
     /**

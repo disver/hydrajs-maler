@@ -1,12 +1,17 @@
+import Hydra from '../../../engine/src/Hydra'
 import Event from '../event/Event'
 import EventReceiver from '../event/EventReceiver'
-import Drawable from './Drawable'
-import Position from './Position'
+import Container from '../layout/base/Container'
+import Drawable from './base/Drawable'
+import Position from './base/Position'
 
 class View implements Drawable, EventReceiver {
+    private _parent: Hydra | Container | null
+    private _state: string
     private _width: number
     private _height: number
     private _position: Position
+    private _propertyHandler: (() => void) | null
 
     // margin register
     private _marginTop: number
@@ -28,16 +33,25 @@ class View implements Drawable, EventReceiver {
     // z index
     private _zIndex: number
 
+    private _draggable: boolean
+
     // map to resolve if should view should response when specific event appear
     private _registeredEvents: Map<string, (event: Event) => void>
+    private _offset: { x: number; y: number } | null
 
 
     protected constructor () {
+        this._state = 'static'
         this._width = 0
         this._height = 0
         this._background = 'black'
+        this._offset = null
         this._position = new Position()
+        this._position.handler = () => {
+            this.onPropertyChanged()
+        }
         this._marginTop = 0
+        this._parent = null
         this._marginRight = 0
         this._marginBottom = 0
         this._marginLeft = 0
@@ -46,7 +60,9 @@ class View implements Drawable, EventReceiver {
         this._paddingBottom = 0
         this._paddingLeft = 0
         this._zIndex = 0
+        this._draggable = false
         this._registeredEvents = new Map<string, () => void>()
+        this._propertyHandler = null
     }
 
 
@@ -66,9 +82,58 @@ class View implements Drawable, EventReceiver {
     public receive (event: Event): void {
         if (this.trigger(event)) {
             const handler = this._registeredEvents.get(event.name)
+            if (event.name === Event.EVENT_MOUSE_MOVE) {
+                this.onMove(event)
+            }
+            if (event.name === Event.EVENT_MOUSE_DOWN) {
+                this.onMouseDown(event)
+            }
+            if (event.name === Event.EVENT_MOUSE_UP) {
+                this.onMouseUp(event)
+            }
             if (handler) {
                 handler(event)
             }
+        }
+    }
+
+
+
+    public propertyChanged (event: () => void): void {
+        this._propertyHandler = event
+    }
+
+    public onPropertyChanged () {
+        this._propertyHandler && this._propertyHandler()
+    }
+
+    public onMouseDown (event: Event): void {
+        if (this._draggable) {
+            this._offset = {
+                x: event.position.x - this.position.x,
+                y: event.position.y - this.position.y
+            }
+            this._state = 'start_drag'
+        }
+    }
+
+    public onMouseUp (event: Event): void {
+        if (this._draggable) {
+            this._state = 'static'
+            console.log(this)
+        }
+    }
+
+
+    public onMove (event: Event): void {
+        if (this._draggable && this._state === 'start_drag' || this._state === 'dragging') {
+            if (this._state !== 'dragging') {
+                this._state = 'dragging'
+            }
+            if (this._offset !== null) {
+               this.position.x = event.position.x  - this._offset.x
+               this.position.y = event.position.y  - this._offset.y
+           }
         }
     }
 
@@ -87,6 +152,30 @@ class View implements Drawable, EventReceiver {
             }
         }
         return false
+    }
+
+
+    get draggable (): boolean {
+        return this._draggable
+    }
+
+    set draggable (value: boolean) {
+        this._draggable = value
+        if (!this._registeredEvents.get(Event.EVENT_MOUSE_MOVE)) {
+            this.addEventListener(Event.EVENT_MOUSE_MOVE, (event: Event) => {
+                console.log()
+            })
+        }
+        if (!this._registeredEvents.get(Event.EVENT_MOUSE_DOWN)) {
+            this.addEventListener(Event.EVENT_MOUSE_DOWN, (event: Event) => {
+                console.log()
+            })
+        }
+        if (!this._registeredEvents.get(Event.EVENT_MOUSE_UP)) {
+            this.addEventListener(Event.EVENT_MOUSE_UP, (event: Event) => {
+                console.log()
+            })
+        }
     }
 
     get width (): number {
@@ -111,6 +200,7 @@ class View implements Drawable, EventReceiver {
 
     set position (value: Position) {
         this._position = value
+        this.onPropertyChanged()
     }
 
     get marginTop (): number {
@@ -191,6 +281,15 @@ class View implements Drawable, EventReceiver {
 
     set zIndex (value: number) {
         this._zIndex = value
+    }
+
+
+    get parent (): Hydra | Container | null {
+        return this._parent
+    }
+
+    set parent (value: Hydra | Container | null) {
+        this._parent = value
     }
 }
 

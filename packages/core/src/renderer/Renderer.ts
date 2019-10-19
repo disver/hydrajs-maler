@@ -1,7 +1,8 @@
+import Hydra from '../../../engine/src/Hydra'
 import View from '../view/View'
 
 interface Renderer {
-    render (view: View): void
+    render (view: View, parent: Hydra): void
 
     setContext (context: CanvasRenderingContext2D | null | undefined): void
 

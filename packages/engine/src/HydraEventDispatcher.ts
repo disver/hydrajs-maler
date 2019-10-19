@@ -3,12 +3,6 @@ import View from '../../core/src/view/View'
 import EventDispatcher from './base/EventDispatcher'
 
 class HydraEventDispatcher implements EventDispatcher {
-
-    get canvas (): HTMLCanvasElement | null | undefined {
-        return this._canvas
-    }
-    private readonly EVENT_CLICK: string = 'click'
-    private readonly EVENT_MOUSE_DOWN: string = 'mouse_down'
     private _canvas: HTMLCanvasElement | null | undefined
     private _views: View []
     constructor () {
@@ -50,8 +44,11 @@ class HydraEventDispatcher implements EventDispatcher {
                     this.dispatch(event, view)
                 })
             }
-            canvas.onclick = e => dispatchEvent(this.EVENT_CLICK, e)
-            canvas.onmousedown = e => dispatchEvent(this.EVENT_MOUSE_DOWN, e)
+            canvas.onclick = e => dispatchEvent(Event.EVENT_CLICK, e)
+            canvas.onmousedown = e => dispatchEvent(Event.EVENT_MOUSE_DOWN, e)
+            canvas.onmouseup = e => dispatchEvent(Event.EVENT_MOUSE_UP, e)
+            canvas.onmousemove = e => dispatchEvent(Event.EVENT_MOUSE_MOVE, e)
+            canvas.onmouseleave = e => dispatchEvent(Event.EVENT_MOUSE_LEAVE, e)
         }
     }
 
@@ -62,6 +59,9 @@ class HydraEventDispatcher implements EventDispatcher {
         }
     }
 
+    get canvas (): HTMLCanvasElement | null | undefined {
+        return this._canvas
+    }
 
     get views (): View[] {
         return this._views

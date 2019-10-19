@@ -39,14 +39,18 @@ class Hydra {
      * render components
      */
     public render () {
-        for (const view of this._views) {
-            // render view to canvas
-            this._renderer.render(view)
+        const context = this._canvas.getContext('2d')
+        if (null != context) {
+            context.clearRect(0, 0, this._canvas.width, this._canvas.height)
+            for (const view of this._views) {
+                // render view to canvas
+                this._renderer.render(view, this)
+            }
         }
     }
 
     // noinspection JSMethodCanBeStatic
-    private createCanvas(element: HTMLElement | HTMLCanvasElement) {
+    private createCanvas (element: HTMLElement | HTMLCanvasElement) {
         let canvas: HTMLCanvasElement | null = null
         if (element instanceof HTMLCanvasElement) {
             canvas = element
