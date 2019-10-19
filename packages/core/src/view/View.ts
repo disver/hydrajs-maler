@@ -3,7 +3,7 @@ import EventReceiver from '../event/EventReceiver'
 import Drawable from './Drawable'
 import Position from './Position'
 
-class View implements Drawable, EventReceiver{
+class View implements Drawable, EventReceiver {
     private _width: number
     private _height: number
     private _position: Position
@@ -32,7 +32,7 @@ class View implements Drawable, EventReceiver{
     private _registeredEvents: Map<string, (event: Event) => void>
 
 
-   protected constructor () {
+    protected constructor () {
         this._width = 0
         this._height = 0
         this._background = 'black'
@@ -65,10 +65,10 @@ class View implements Drawable, EventReceiver{
 
     public receive (event: Event): void {
         if (this.trigger(event)) {
-           const handler = this._registeredEvents.get(event.name)
-           if (handler) {
-               handler(event)
-           }
+            const handler = this._registeredEvents.get(event.name)
+            if (handler) {
+                handler(event)
+            }
         }
     }
 
@@ -81,8 +81,8 @@ class View implements Drawable, EventReceiver{
             const viewX = this.position.x
             const viewY = this.position.y
 
-            if ((mouseX >= viewX || mouseX <= viewX + this.width)
-                && (mouseY >= viewY || mouseY <= viewY + this.height)) {
+            if ((mouseX >= viewX && mouseX <= viewX + this.width)
+                && (mouseY >= viewY && mouseY <= viewY + this.height)) {
                 return true
             }
         }
