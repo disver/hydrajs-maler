@@ -19,23 +19,33 @@
     let view = new window.View()
 
     view.width = 150
-    view.height = 150
-    view.background = 'red'
+    view.height = 50
+    view.position.x = 150
+    view.background = '#656565'
     view.draggable = true
+    view.zIndex = 3
+
+    let viewTop = new window.View()
+
+    viewTop.width = 150
+    viewTop.height = 50
+    viewTop.background = '#bcbcbc'
+    viewTop.draggable = true
+    viewTop.zIndex = 0
 
     view.addEventListener('click', e => {
-        console.log(e.name)
     })
 
-    setInterval(() => {
-        view.position.x++
-        view.width++
-        view.height++
-    }, 100)
+    // setInterval(() => {
+    //     view.position.x++
+    //     view.width++
+    //     view.height++
+    // }, 100)
 
 
     hydra
         .attach(view)
+        .attach(viewTop)
         .render()
 </script>
 </html>

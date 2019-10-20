@@ -16,11 +16,12 @@ class Layout extends View implements Container {
     }
 
 
-    public receive (event: Event): void {
+    public receive (event: Event): boolean {
         super.receive(event)
         for (const view of this._children) {
             dispatcher.dispatch(event, view)
         }
+        return false
     }
 }
 

@@ -6,6 +6,7 @@ class Event {
     public static _EVENT_MOUSE_MOVE: string = 'mouse_move'
     public static _EVENT_MOUSE_LEAVE: string = 'mouse_leave'
     public static _EVENT_MOUSE_UP: string = 'mouse_up'
+    public static _EVENT_MOUSE_ENTER: string = 'mouse_enter'
     private readonly _name: string
     private _position: Position
     private _button: number
@@ -19,6 +20,10 @@ class Event {
 
    static get EVENT_CLICK (): string {
         return Event._EVENT_CLICK
+    }
+
+   static get EVENT_MOUSE_ENTER (): string {
+        return Event._EVENT_MOUSE_ENTER
     }
 
     static get EVENT_MOUSE_DOWN (): string {

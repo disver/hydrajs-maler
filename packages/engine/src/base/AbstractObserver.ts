@@ -6,7 +6,6 @@ export function Property () {
             target._properties = []
         }
         target._properties.push(propertyName)
-        console.log(target._properties)
     }
 }
 

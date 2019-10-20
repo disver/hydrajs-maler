@@ -42,7 +42,8 @@ class Hydra {
         const context = this._canvas.getContext('2d')
         if (null != context) {
             context.clearRect(0, 0, this._canvas.width, this._canvas.height)
-            for (const view of this._views) {
+            const renderView = this._views.sort((leftView, rightView) => leftView.zIndex - rightView.zIndex)
+            for (const view of renderView) {
                 // render view to canvas
                 this._renderer.render(view, this)
             }

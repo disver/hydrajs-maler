@@ -20,6 +20,8 @@ interface Drawable {
 
     onMouseLeave (event: Event): void
 
+    onMouseEnter (event: Event): void
+
 }
 
 export default Drawable

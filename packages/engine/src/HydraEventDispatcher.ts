@@ -3,11 +3,37 @@ import View from '../../core/src/view/View'
 import EventDispatcher from './base/EventDispatcher'
 
 class HydraEventDispatcher implements EventDispatcher {
+
+    get canvas (): HTMLCanvasElement | null | undefined {
+        return this._canvas
+    }
+
+    get views (): View[] {
+        return this._views
+    }
     private _canvas: HTMLCanvasElement | null | undefined
     private _views: View []
     constructor () {
         this._canvas = null
         this._views = []
+    }
+
+    public ergodic (views: View [], call: (view: View) => boolean): void {
+        const target = views.sort((left, right) => right.zIndex - left.zIndex)
+        let responseView = null
+        for (const view of target) {
+            if (responseView !== null && responseView === view) {
+                call && (call(responseView))
+            } else {
+                let res = false
+                call && (res = call(view))
+                if (res) {
+                    responseView = view
+                } else {
+                    view.state = 'static'
+                }
+            }
+        }
     }
 
     public with (canvas: HTMLCanvasElement | null | undefined): HydraEventDispatcher {
@@ -28,8 +54,8 @@ class HydraEventDispatcher implements EventDispatcher {
         this.forward(this._views)
     }
 
-    public dispatch (event: Event, view: View): void {
-        view.receive(event)
+    public dispatch (event: Event, view: View): boolean {
+        return view.receive(event)
     }
 
     private forward (views: View []) {
@@ -41,7 +67,7 @@ class HydraEventDispatcher implements EventDispatcher {
                 event.position.x = e.offsetX
                 event.position.y = e.offsetY
                 this.ergodic(views, view => {
-                    this.dispatch(event, view)
+                    return this.dispatch(event, view)
                 })
             }
             canvas.onclick = e => dispatchEvent(Event.EVENT_CLICK, e)
@@ -52,20 +78,6 @@ class HydraEventDispatcher implements EventDispatcher {
         }
     }
 
-    // noinspection JSMethodCanBeStatic
-    private ergodic (views: View [], call: (view: View) => void) {
-        for (const view of views) {
-            call && call(view)
-        }
-    }
-
-    get canvas (): HTMLCanvasElement | null | undefined {
-        return this._canvas
-    }
-
-    get views (): View[] {
-        return this._views
-    }
 }
 
 export default new HydraEventDispatcher()

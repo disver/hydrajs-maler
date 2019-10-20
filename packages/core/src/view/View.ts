@@ -2,12 +2,11 @@ import AbstractObserver, {Property} from '../../../engine/src/base/AbstractObser
 import Hydra from '../../../engine/src/Hydra'
 import Event from '../event/Event'
 import EventReceiver from '../event/EventReceiver'
-import Container from '../layout/base/Container'
 import Drawable from './base/Drawable'
 import Position from './base/Position'
 
 class View extends AbstractObserver implements Drawable, EventReceiver{
-    private _parent: Hydra | Container | null
+    private _hydra: Hydra | null
     private _state: string
     @Property()
     private _width: number
@@ -15,7 +14,6 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
     private _height: number
     @Property()
     private _position: Position
-    private _propertyHandler: (() => void) | null
 
     // margin register
     private _marginTop: number
@@ -56,7 +54,7 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
             this.notify()
         }
         this._marginTop = 0
-        this._parent = null
+        this._hydra = null
         this._marginRight = 0
         this._marginBottom = 0
         this._marginLeft = 0
@@ -67,7 +65,6 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
         this._zIndex = 0
         this._draggable = false
         this._registeredEvents = new Map<string, () => void>()
-        this._propertyHandler = null
         this.initialize()
     }
 
@@ -85,7 +82,7 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
     }
 
 
-    public receive (event: Event): void {
+    public receive (event: Event): boolean {
         if (this.trigger(event)) {
             const handler = this._registeredEvents.get(event.name)
             if (event.name === Event.EVENT_MOUSE_MOVE) {
@@ -103,17 +100,9 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
             if (handler) {
                 handler(event)
             }
+            return true
         }
-    }
-
-
-
-    public propertyChanged (event: () => void): void {
-        this._propertyHandler = event
-    }
-
-    public onPropertyChanged () {
-        this._propertyHandler && this._propertyHandler()
+        return false
     }
 
     public onMouseDown (event: Event): void {
@@ -130,6 +119,12 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
         if (this._draggable) {
             this._state = 'static'
         }
+    }
+
+
+
+    public onMouseEnter (event: Event): void {
+        console.log()
     }
 
 
@@ -164,6 +159,7 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
 
             if ((mouseX >= viewX && mouseX <= viewX + this.width)
                 && (mouseY >= viewY && mouseY <= viewY + this.height)) {
+                this.onMouseEnter(event)
                 return true
             }
         }
@@ -299,16 +295,18 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
     }
 
 
-    get parent (): Hydra | Container | null {
-        return this._parent
+    get hydra (): Hydra | null{
+        return this._hydra
     }
 
-    set parent (value: Hydra | Container | null) {
-        this._parent = value
+    set hydra (value: Hydra | null) {
+        this._hydra = value
     }
 
     public notify (): void {
-        this.onPropertyChanged()
+        if (null !== this._hydra) {
+            this._hydra.render()
+        }
     }
 }
 

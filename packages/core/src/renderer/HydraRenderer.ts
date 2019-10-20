@@ -14,16 +14,7 @@ class HydraRenderer implements Renderer {
      */
     public render (view: View, parent: Hydra) {
         view.render(this.getContext())
-        view.parent = parent
-        view.propertyChanged(() => {
-            if (view.parent) {
-                if (view.parent instanceof Hydra) {
-                    view.parent.render()
-                }
-            } else {
-                view.render(this.getContext())
-            }
-        })
+        view.hydra = parent
     }
 
     /**
