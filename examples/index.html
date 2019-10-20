@@ -15,37 +15,38 @@
 </body>
 <script src="../dist/bundle/hydra.es.js"></script>
 <script>
-    let hydra = new window.Hydra(document.getElementById('root'))
-    let view = new window.View()
+  let hydra = new window.Hydra(document.getElementById('root'))
+  let view = new window.View()
 
-    view.width = 150
-    view.height = 50
-    view.position.x = 150
-    view.background = '#656565'
-    view.draggable = true
-    view.zIndex = 3
+  view.width = 150
+  view.height = 50
+  view.position.x = 150
+  view.style.background = '#656565'
+  view.draggable = true
+  view.zIndex = 3
 
-    let viewTop = new window.View()
+  let viewTop = new window.View()
 
-    viewTop.width = 150
-    viewTop.height = 50
-    viewTop.background = '#bcbcbc'
-    viewTop.draggable = true
-    viewTop.zIndex = 0
+  viewTop.width = 150
+  viewTop.height = 50
+  viewTop.style.background = 'red'
+  viewTop.draggable = true
+  viewTop.zIndex = 0
 
-    view.addEventListener('click', e => {
-    })
+  view.addEventListener('click', e => {
+  })
 
-    // setInterval(() => {
-    //     view.position.x++
-    //     view.width++
-    //     view.height++
-    // }, 100)
+  setInterval(() => {
+    view.position.x++
+    view.width++
+    view.height++
+    view.style.background = ['red', '#00ff0c', '#000937', '#110937', '#ff94fc'][Math.floor(Math.random() * 4)]
+  }, 20)
 
 
-    hydra
-        .attach(view)
-        .attach(viewTop)
-        .render()
+  hydra
+      .attach(view)
+      .attach(viewTop)
+      .render()
 </script>
 </html>

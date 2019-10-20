@@ -4,8 +4,9 @@ import Event from '../event/Event'
 import EventReceiver from '../event/EventReceiver'
 import Drawable from './base/Drawable'
 import Position from './base/Position'
+import Style from './base/Style'
 
-class View extends AbstractObserver implements Drawable, EventReceiver{
+class View extends AbstractObserver implements Drawable, EventReceiver {
     private _hydra: Hydra | null
     private _state: string
     @Property()
@@ -14,23 +15,8 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
     private _height: number
     @Property()
     private _position: Position
-
-    // margin register
-    private _marginTop: number
-    private _marginRight: number
-    private _marginBottom: number
-    private _marginLeft: number
-    // margin end
-
-    // padding register
-    private _paddingTop: number
-    private _paddingRight: number
-    private _paddingBottom: number
-    private _paddingLeft: number
-    // padding end
-
-    // background of view
-    private _background: string
+    @Property()
+    private _style: Style
 
     // z index
     private _zIndex: number
@@ -47,21 +33,13 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
         this._state = 'static'
         this._width = 0
         this._height = 0
-        this._background = 'black'
+        this._style = new Style()
         this._offset = null
         this._position = new Position()
         this._position.handler = () => {
             this.notify()
         }
-        this._marginTop = 0
         this._hydra = null
-        this._marginRight = 0
-        this._marginBottom = 0
-        this._marginLeft = 0
-        this._paddingTop = 0
-        this._paddingRight = 0
-        this._paddingBottom = 0
-        this._paddingLeft = 0
         this._zIndex = 0
         this._draggable = false
         this._registeredEvents = new Map<string, () => void>()
@@ -76,7 +54,7 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
 
     public render (context: CanvasRenderingContext2D | null | undefined) {
         if (context instanceof CanvasRenderingContext2D) {
-            context.fillStyle = this._background
+            context.fillStyle = this._style.background
             context.fillRect(this._position.x, this._position.y, this._width, this._height)
         }
     }
@@ -122,14 +100,13 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
     }
 
 
-
     public onMouseEnter (event: Event): void {
         console.log()
     }
 
 
     public onMouseLeave (event: Event): void {
-       console.log()
+        console.log()
     }
 
 
@@ -139,9 +116,9 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
                 this._state = 'dragging'
             }
             if (this._offset !== null) {
-               this.position.x = event.position.x  - this._offset.x
-               this.position.y = event.position.y  - this._offset.y
-           }
+                this.position.x = event.position.x - this._offset.x
+                this.position.y = event.position.y - this._offset.y
+            }
         }
     }
 
@@ -190,6 +167,23 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
         }
     }
 
+
+    get hydra (): Hydra | null {
+        return this._hydra
+    }
+
+    set hydra (value: Hydra | null) {
+        this._hydra = value
+    }
+
+    get state (): string {
+        return this._state
+    }
+
+    set state (value: string) {
+        this._state = value
+    }
+
     get width (): number {
         return this._width
     }
@@ -214,76 +208,12 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
         this._position = value
     }
 
-    get marginTop (): number {
-        return this._marginTop
+    get style (): Style {
+        return this._style
     }
 
-    set marginTop (value: number) {
-        this._marginTop = value
-    }
-
-    get marginRight (): number {
-        return this._marginRight
-    }
-
-    set marginRight (value: number) {
-        this._marginRight = value
-    }
-
-    get marginBottom (): number {
-        return this._marginBottom
-    }
-
-    set marginBottom (value: number) {
-        this._marginBottom = value
-    }
-
-    get marginLeft (): number {
-        return this._marginLeft
-    }
-
-    set marginLeft (value: number) {
-        this._marginLeft = value
-    }
-
-    get paddingTop (): number {
-        return this._paddingTop
-    }
-
-    set paddingTop (value: number) {
-        this._paddingTop = value
-    }
-
-    get paddingRight (): number {
-        return this._paddingRight
-    }
-
-    set paddingRight (value: number) {
-        this._paddingRight = value
-    }
-
-    get paddingBottom (): number {
-        return this._paddingBottom
-    }
-
-    set paddingBottom (value: number) {
-        this._paddingBottom = value
-    }
-
-    get paddingLeft (): number {
-        return this._paddingLeft
-    }
-
-    set paddingLeft (value: number) {
-        this._paddingLeft = value
-    }
-
-    get background (): string {
-        return this._background
-    }
-
-    set background (value: string) {
-        this._background = value
+    set style (value: Style) {
+        this._style = value
     }
 
     get zIndex (): number {
@@ -292,15 +222,6 @@ class View extends AbstractObserver implements Drawable, EventReceiver{
 
     set zIndex (value: number) {
         this._zIndex = value
-    }
-
-
-    get hydra (): Hydra | null{
-        return this._hydra
-    }
-
-    set hydra (value: Hydra | null) {
-        this._hydra = value
     }
 
     public notify (): void {
