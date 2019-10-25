@@ -1,49 +1,37 @@
-import AbstractObserver, {Property} from '../../../engine/src/base/AbstractObserver'
+// @ts-ignore
+import TWEEN from '@tweenjs/tween.js/dist/tween.esm.js'
+import DataProxy from '../../../engine/src/base/proxy/DataProxy'
 import Hydra from '../../../engine/src/Hydra'
 import Event from '../event/Event'
 import EventReceiver from '../event/EventReceiver'
+import AnimationSupport from './base/AnimationSupport'
 import Drawable from './base/Drawable'
 import Position from './base/Position'
 import Style from './base/Style'
 
-class View extends AbstractObserver implements Drawable, EventReceiver {
+class View extends DataProxy implements Drawable, EventReceiver, AnimationSupport {
     private _hydra: Hydra | null
     private _state: string
-    @Property()
-    private _width: number
-    @Property()
-    private _height: number
-    @Property()
     private _position: Position
-    @Property()
     private _style: Style
-
-    // z index
-    private _zIndex: number
 
     private _draggable: boolean
 
-    // map to resolve if should view should response when specific event appear
+    // map to configureProperties if should view should response when specific event appear
     private _registeredEvents: Map<string, (event: Event) => void>
     private _offset: { x: number; y: number } | null
 
 
-    protected constructor () {
+    public constructor () {
         super()
         this._state = 'static'
-        this._width = 0
-        this._height = 0
         this._style = new Style()
         this._offset = null
         this._position = new Position()
-        this._position.handler = () => {
-            this.notify()
-        }
         this._hydra = null
-        this._zIndex = 0
         this._draggable = false
         this._registeredEvents = new Map<string, () => void>()
-        this.initialize()
+        this.bindData()
     }
 
 
@@ -55,14 +43,14 @@ class View extends AbstractObserver implements Drawable, EventReceiver {
     public render (context: CanvasRenderingContext2D | null | undefined) {
         if (context instanceof CanvasRenderingContext2D) {
             context.fillStyle = this._style.background
-            context.fillRect(this._position.x, this._position.y, this._width, this._height)
+            context.fillRect(this._position.x, this._position.y, this._style.width, this._style.height)
         }
     }
 
 
     public receive (event: Event): boolean {
         if (this.trigger(event)) {
-            const handler = this._registeredEvents.get(event.name)
+            this.onMouseEnter(event)
             if (event.name === Event.EVENT_MOUSE_MOVE) {
                 this.onMove(event)
             }
@@ -75,8 +63,10 @@ class View extends AbstractObserver implements Drawable, EventReceiver {
             if (event.name === Event.EVENT_MOUSE_UP) {
                 this.onMouseUp(event)
             }
-            if (handler) {
-                handler(event)
+            // if view has registered event
+            if (this._registeredEvents.get(event.name)) {
+                const handler = this._registeredEvents.get(event.name)
+                handler && handler(event)
             }
             return true
         }
@@ -100,6 +90,7 @@ class View extends AbstractObserver implements Drawable, EventReceiver {
     }
 
 
+
     public onMouseEnter (event: Event): void {
         console.log()
     }
@@ -118,6 +109,14 @@ class View extends AbstractObserver implements Drawable, EventReceiver {
             if (this._offset !== null) {
                 this.position.x = event.position.x - this._offset.x
                 this.position.y = event.position.y - this._offset.y
+                // if view has registered event
+                if (this._registeredEvents.get(Event.EVENT_MOUSE_DRAG)) {
+                    const dragEvent = new Event(Event.EVENT_MOUSE_DRAG)
+                    dragEvent.position = event.position
+                    dragEvent.button = event.button
+                    const handler = this._registeredEvents.get(Event.EVENT_MOUSE_DRAG)
+                    handler && handler(dragEvent)
+                }
             }
         }
     }
@@ -126,22 +125,99 @@ class View extends AbstractObserver implements Drawable, EventReceiver {
         if (this._state === 'dragging') {
             return true
         }
-        // if view has registered event
-        if (this._registeredEvents.get(event.name)) {
-            const mouseX = event.position.x
-            const mouseY = event.position.y
 
-            const viewX = this.position.x
-            const viewY = this.position.y
+        const mouseX = event.position.x
+        const mouseY = event.position.y
 
-            if ((mouseX >= viewX && mouseX <= viewX + this.width)
-                && (mouseY >= viewY && mouseY <= viewY + this.height)) {
-                this.onMouseEnter(event)
-                return true
+        const viewX = this.position.x
+        const viewY = this.position.y
+
+        return (mouseX >= viewX && mouseX <= viewX + this._style.width)
+            && (mouseY >= viewY && mouseY <= viewY + this._style.height)
+    }
+
+    public notify (): void {
+        if (this._hydra !== undefined && this._hydra !== null) {
+            this._hydra.render()
+        }
+    }
+
+    public onMeasure (): void {
+        // this.width = this._width
+        // this.height = this._height
+    }
+
+    public animate (options: any): void {
+        let id: any = null
+        const ani = (time: any) => {
+            id = requestAnimationFrame(ani)
+            TWEEN.update(time)
+        }
+        requestAnimationFrame(ani)
+        const cords: any = {}
+        const positionKeys: string [] = Object.getOwnPropertyNames(this.position)
+        const target: any = {}
+        if (options.hasOwnProperty('position')) {
+            const _position: any = options.position
+            for (const key of Object.getOwnPropertyNames(_position)) {
+                if (positionKeys.indexOf('_'.concat(key)) !== -1) {
+                    const value = Reflect.get(this._position, key)
+                    Reflect.set(cords, key, value)
+                    target[key] = options.position[key]
+                }
             }
         }
-        return false
+        const styleKeys: string [] = Object.getOwnPropertyNames(this.style)
+        if (options.hasOwnProperty('style')) {
+            const _style: any = options.style
+            for (const key of Object.getOwnPropertyNames(_style)) {
+                if (styleKeys.indexOf('_'.concat(key)) !== -1) {
+                    const value = Reflect.get(this._style, key)
+                    Reflect.set(cords, key, value)
+                    target[key] = options.style[key]
+                }
+            }
+        }
+        console.log(cords)
+        console.log(target)
+        new TWEEN.Tween(cords)
+            .easing(TWEEN.Easing.Elastic.InOut)
+            .to(target, 3000)
+            .onUpdate(() => {
+                for (const key of Object.keys(cords)) {
+                   if (cords.hasOwnProperty(key) && styleKeys.indexOf('_'.concat(key)) !== -1) {
+                       Reflect.set(this.style, key, cords[key])
+                   }
+                   if (cords.hasOwnProperty(key) && positionKeys.indexOf('_'.concat(key)) !== -1) {
+                        Reflect.set(this.position, key, cords[key])
+                    }
+                }
+            })
+            .onComplete(() => {
+                cancelAnimationFrame(id)
+            })
+            .start()
     }
+    /**
+     * bind chain data of view
+     */
+    private bindData () {
+        const handler = {
+            get: (obj: any, property: string) => {
+                return obj[property]
+            },
+            set: (obj: any, property: string, value: any) => {
+                const result = Reflect.set(obj, property, value)
+                if (result) {
+                    this.notify()
+                }
+                return result
+            }
+        }
+        this._proxies.style = new Proxy(this._style, handler)
+        this._proxies.position = new Proxy(this._position, handler)
+    }
+
 
 
     get draggable (): boolean {
@@ -150,21 +226,6 @@ class View extends AbstractObserver implements Drawable, EventReceiver {
 
     set draggable (value: boolean) {
         this._draggable = value
-        if (!this._registeredEvents.get(Event.EVENT_MOUSE_MOVE)) {
-            this.addEventListener(Event.EVENT_MOUSE_MOVE, (event: Event) => {
-                console.log()
-            })
-        }
-        if (!this._registeredEvents.get(Event.EVENT_MOUSE_DOWN)) {
-            this.addEventListener(Event.EVENT_MOUSE_DOWN, (event: Event) => {
-                console.log()
-            })
-        }
-        if (!this._registeredEvents.get(Event.EVENT_MOUSE_UP)) {
-            this.addEventListener(Event.EVENT_MOUSE_UP, (event: Event) => {
-                console.log()
-            })
-        }
     }
 
 
@@ -184,24 +245,16 @@ class View extends AbstractObserver implements Drawable, EventReceiver {
         this._state = value
     }
 
-    get width (): number {
-        return this._width
+    get registeredEvents (): Map<string, (event: Event) => void> {
+        return this._registeredEvents
     }
 
-    set width (value: number) {
-        this._width = value
-    }
-
-    get height (): number {
-        return this._height
-    }
-
-    set height (value: number) {
-        this._height = value
+    set registeredEvents (value: Map<string, (event: Event) => void>) {
+        this._registeredEvents = value
     }
 
     get position (): Position {
-        return this._position
+        return this._proxies.position
     }
 
     set position (value: Position) {
@@ -209,25 +262,11 @@ class View extends AbstractObserver implements Drawable, EventReceiver {
     }
 
     get style (): Style {
-        return this._style
+        return this._proxies.style
     }
 
     set style (value: Style) {
         this._style = value
-    }
-
-    get zIndex (): number {
-        return this._zIndex
-    }
-
-    set zIndex (value: number) {
-        this._zIndex = value
-    }
-
-    public notify (): void {
-        if (null !== this._hydra) {
-            this._hydra.render()
-        }
     }
 }
 

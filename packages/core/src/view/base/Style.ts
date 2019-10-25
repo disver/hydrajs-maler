@@ -1,7 +1,6 @@
-import AbstractObserver, {Properties} from '../../../../engine/src/base/AbstractObserver'
-
-@Properties(['handler', 'notify', 'onChanged'])
-class Style extends AbstractObserver {
+class Style {
+    private _width: number
+    private _height: number
     // margin register
     private _marginTop: number
     private _marginRight: number
@@ -18,10 +17,12 @@ class Style extends AbstractObserver {
 
     // background of view
     private _background: string
-    private _handler: (() => void) | null
+    // z index
+    private _zIndex: number
 
     constructor () {
-        super()
+        this._width = 0
+        this._height = 0
         this._marginTop = 0
         this._marginRight = 0
         this._marginBottom = 0
@@ -31,17 +32,25 @@ class Style extends AbstractObserver {
         this._paddingBottom = 0
         this._marginTop = 0
         this._paddingLeft = 0
-        this._background = '#00ff0c'
-        this._handler = null
-        this.initialize()
+        this._background = '#ffffff'
+        this._zIndex = 0
     }
 
-    public notify (): void {
-        this.onChanged()
+
+    get width (): number {
+        return this._width
     }
 
-    private onChanged (): void {
-        this._handler && this._handler()
+    set width (value: number) {
+        this._width = value
+    }
+
+    get height (): number {
+        return this._height
+    }
+
+    set height (value: number) {
+        this._height = value
     }
 
     get marginTop (): number {
@@ -108,20 +117,20 @@ class Style extends AbstractObserver {
         this._paddingLeft = value
     }
 
+    get zIndex (): number {
+        return this._zIndex
+    }
+
+    set zIndex (value: number) {
+        this._zIndex = value
+    }
+
     get background (): string {
         return this._background
     }
 
     set background (value: string) {
         this._background = value
-    }
-
-    get handler (): (() => void) | null {
-        return this._handler
-    }
-
-    set handler (value: (() => void) | null) {
-        this._handler = value
     }
 }
 

@@ -7,14 +7,19 @@ import {
 
 import {
     Hydra,
-    HydraEventDispatcher
+    SampleEventDispatcher
 } from './engine'
+
+import {
+    ShadowView
+} from './component'
 
 export {
     Hydra,
     HydraRenderer,
-    HydraEventDispatcher,
+    SampleEventDispatcher,
     Event,
+    ShadowView,
     View,
     Position
 }

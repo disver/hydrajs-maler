@@ -16,37 +16,68 @@
 <script src="../dist/bundle/hydra.es.js"></script>
 <script>
   let hydra = new window.Hydra(document.getElementById('root'))
-  let view = new window.View()
+  let view = new window.ShadowView()
 
-  view.width = 150
-  view.height = 50
-  view.position.x = 150
-  view.style.background = '#656565'
+  view.style.width = 150
+  view.style.height = 50
+  view.position.x = 0
+  view.position.y = 230
+  view.shadowHeight = 15
+  view.style.background = 'gold'
   view.draggable = true
-  view.zIndex = 3
 
   let viewTop = new window.View()
 
-  viewTop.width = 150
-  viewTop.height = 50
   viewTop.style.background = 'red'
+  viewTop.style.width = 300
+  viewTop.style.height = 200
   viewTop.draggable = true
-  viewTop.zIndex = 0
+
+  let viewTest = new window.View()
+
+
+  viewTest.style.background = 'red'
+  viewTest.position.x = 300
+
 
   view.addEventListener('click', e => {
+      viewTop.animate({
+          style: {
+              width: 50,
+              height: 50
+          },
+          position: {
+              x: 0,
+              y: 0
+          }
+      })
+
+      setTimeout(() => {
+          view.animate({
+              style: {
+                  width: 150,
+                  height: 250
+              },
+              position: {
+                  x: 550,
+                  y: 45
+              }
+          })
+      }, 3000)
   })
 
-  setInterval(() => {
-    view.position.x++
-    view.width++
-    view.height++
-    view.style.background = ['red', '#00ff0c', '#000937', '#110937', '#ff94fc'][Math.floor(Math.random() * 4)]
-  }, 20)
+  viewTop.addEventListener('mouse_down', e => {
+     console.log(e)
+  })
 
+  viewTop.addEventListener('mouse_up', e => {
+      console.log(e)
+  })
 
   hydra
       .attach(view)
       .attach(viewTop)
+      // .attach(viewTest)
       .render()
 </script>
 </html>

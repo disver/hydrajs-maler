@@ -1,7 +1,7 @@
 import Hydra from './src/Hydra'
-import HydraEventDispatcher from './src/HydraEventDispatcher'
+import SampleEventDispatcher from './src/SampleEventDispatcher'
 
 export {
     Hydra,
-    HydraEventDispatcher
+    SampleEventDispatcher
 }

@@ -1,8 +1,7 @@
 import HydraRenderer from '../../core/src/renderer/HydraRenderer'
 import View from '../../core/src/view/View'
 import EventDispatcher from './base/EventDispatcher'
-import dispatcher from './HydraEventDispatcher'
-
+import SampleEventDispatcher from './SampleEventDispatcher'
 /**
  * @author 4everlynn
  */
@@ -16,8 +15,8 @@ class Hydra {
         this._canvas = this.createCanvas(element)
         this._renderer = new HydraRenderer(this._canvas.getContext('2d'))
         this._views = []
-
         // set canvas for dispatcher
+        const dispatcher = new SampleEventDispatcher()
         dispatcher
             .with(this._canvas)
             .join(this._views)
@@ -41,8 +40,9 @@ class Hydra {
     public render () {
         const context = this._canvas.getContext('2d')
         if (null != context) {
+            // clear canvas to render new frame
             context.clearRect(0, 0, this._canvas.width, this._canvas.height)
-            const renderView = this._views.sort((leftView, rightView) => leftView.zIndex - rightView.zIndex)
+            const renderView = this._views.sort((leftView, rightView) => leftView.style.zIndex - rightView.style.zIndex)
             for (const view of renderView) {
                 // render view to canvas
                 this._renderer.render(view, this)

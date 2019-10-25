@@ -22,6 +22,8 @@ interface Drawable {
 
     onMouseEnter (event: Event): void
 
+    onMeasure (): void
+
 }
 
 export default Drawable

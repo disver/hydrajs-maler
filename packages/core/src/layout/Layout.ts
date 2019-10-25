@@ -1,4 +1,3 @@
-import dispatcher from '../../../engine/src/HydraEventDispatcher'
 import Event from '../event/Event'
 import View from '../view/View'
 import Container from './base/Container'
@@ -19,7 +18,7 @@ class Layout extends View implements Container {
     public receive (event: Event): boolean {
         super.receive(event)
         for (const view of this._children) {
-            dispatcher.dispatch(event, view)
+            // dispatcher.dispatch(event, view)
         }
         return false
     }

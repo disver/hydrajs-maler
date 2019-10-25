@@ -7,6 +7,10 @@ class Event {
     public static _EVENT_MOUSE_LEAVE: string = 'mouse_leave'
     public static _EVENT_MOUSE_UP: string = 'mouse_up'
     public static _EVENT_MOUSE_ENTER: string = 'mouse_enter'
+    public static _EVENT_MOUSE_DRAG: string = 'mouse_drag'
+    public static _EMPTY_HANDLER: () => void = () => {
+        // empty block
+    }
     private readonly _name: string
     private _position: Position
     private _button: number
@@ -20,6 +24,14 @@ class Event {
 
    static get EVENT_CLICK (): string {
         return Event._EVENT_CLICK
+    }
+
+    static get EVENT_MOUSE_DRAG (): string {
+        return Event._EVENT_MOUSE_DRAG
+    }
+
+    static get EMPTY_HANDLER (): () => void{
+        return Event._EMPTY_HANDLER
     }
 
    static get EVENT_MOUSE_ENTER (): string {
