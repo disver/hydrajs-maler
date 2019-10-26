@@ -1,4 +1,5 @@
 import Event from '../../event/Event'
+import Style from './Style'
 
 interface Drawable {
     /**
@@ -6,6 +7,8 @@ interface Drawable {
      * and handle when event appear
      */
     addEventListener (name: string, handler: (event: Event) => void): void
+
+    fillStyle (style: Style | null, context: CanvasRenderingContext2D | null | undefined): void
 
     /**
      *  render view

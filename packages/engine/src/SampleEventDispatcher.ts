@@ -55,9 +55,8 @@ class SampleEventDispatcher implements EventDispatcher {
                     if (responseView !== null && responseView === view) {
                         this.dispatch(event, view)
                     } else {
-                        res = view.trigger(event)
+                        res = this.dispatch(event, view)
                         if (res) {
-                            this.dispatch(event, view)
                             responseView = view
                         } else {
                             view.state = 'static'
@@ -69,7 +68,6 @@ class SampleEventDispatcher implements EventDispatcher {
             canvas.onmousedown = e => dispatchEvent(Event.EVENT_MOUSE_DOWN, e)
             canvas.onmouseup = e => dispatchEvent(Event.EVENT_MOUSE_UP, e)
             canvas.onmousemove = e => dispatchEvent(Event.EVENT_MOUSE_MOVE, e)
-            canvas.onmouseleave = e => dispatchEvent(Event.EVENT_MOUSE_LEAVE, e)
         }
     }
 

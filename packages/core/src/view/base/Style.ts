@@ -20,6 +20,11 @@ class Style {
     // z index
     private _zIndex: number
 
+    private _shadowBlur: number
+    private _shadowColor: string
+    private _shadowOffsetX: number
+    private _shadowOffsetY: number
+
     constructor () {
         this._width = 0
         this._height = 0
@@ -29,13 +34,33 @@ class Style {
         this._marginLeft = 0
         this._paddingTop = 0
         this._paddingRight = 0
+        this._shadowBlur = 0
+        this._shadowColor = ''
         this._paddingBottom = 0
+        this._shadowOffsetX = 0
+        this._shadowOffsetY = 0
         this._marginTop = 0
         this._paddingLeft = 0
         this._background = '#ffffff'
         this._zIndex = 0
     }
 
+
+    get shadowBlur (): number {
+        return this._shadowBlur
+    }
+
+    set shadowBlur (value: number) {
+        this._shadowBlur = value
+    }
+
+    get shadowColor (): string {
+        return this._shadowColor
+    }
+
+    set shadowColor (value: string) {
+        this._shadowColor = value
+    }
 
     get width (): number {
         return this._width
@@ -123,6 +148,23 @@ class Style {
 
     set zIndex (value: number) {
         this._zIndex = value
+    }
+
+
+    get shadowOffsetX (): number {
+        return this._shadowOffsetX
+    }
+
+    set shadowOffsetX (value: number) {
+        this._shadowOffsetX = value
+    }
+
+    get shadowOffsetY (): number {
+        return this._shadowOffsetY
+    }
+
+    set shadowOffsetY (value: number) {
+        this._shadowOffsetY = value
     }
 
     get background (): string {

@@ -10,11 +10,65 @@ import Position from './base/Position'
 import Style from './base/Style'
 
 class View extends DataProxy implements Drawable, EventReceiver, AnimationSupport {
+    get draggable (): boolean {
+        return this._draggable
+    }
+
+    set draggable (value: boolean) {
+        this._draggable = value
+    }
+
+
+    get hydra (): Hydra | null {
+        return this._hydra
+    }
+
+    set hydra (value: Hydra | null) {
+        this._hydra = value
+    }
+
+    get state (): string {
+        return this._state
+    }
+
+    set state (value: string) {
+        this._state = value
+    }
+
+    get registeredEvents (): Map<string, (event: Event) => void> {
+        return this._registeredEvents
+    }
+
+    set registeredEvents (value: Map<string, (event: Event) => void>) {
+        this._registeredEvents = value
+    }
+
+    get position (): Position {
+        return this._proxies.position
+    }
+
+    set position (value: Position) {
+        this._position = value
+    }
+
+
+    get props (): any {
+        return this._proxies.props
+    }
+
+    get style (): Style {
+        return this._proxies.style
+    }
+
+    set style (value: Style) {
+        this._style = value
+    }
     private _hydra: Hydra | null
     private _state: string
     private _position: Position
     private _style: Style
-
+    private readonly _props: any
+    private _cachedPosition: Position | null = null
     private _draggable: boolean
 
     // map to configureProperties if should view should response when specific event appear
@@ -31,9 +85,9 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
         this._hydra = null
         this._draggable = false
         this._registeredEvents = new Map<string, () => void>()
+        this._props = this.data()
         this.bindData()
     }
-
 
     public addEventListener (name: string, handler: (event: Event) => void): void {
         this._registeredEvents.set(name, handler)
@@ -42,7 +96,7 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
 
     public render (context: CanvasRenderingContext2D | null | undefined) {
         if (context instanceof CanvasRenderingContext2D) {
-            context.fillStyle = this._style.background
+            this.fillStyle(this.style, context)
             context.fillRect(this._position.x, this._position.y, this._style.width, this._style.height)
         }
     }
@@ -50,7 +104,14 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
 
     public receive (event: Event): boolean {
         if (this.trigger(event)) {
-            this.onMouseEnter(event)
+            // call when first entered
+            if (this._cachedPosition === null) {
+                this.onMouseEnter(event)
+                const enterEvent = new Event(Event.EVENT_MOUSE_ENTER)
+                enterEvent.position = event.position
+                const handler = this._registeredEvents.get(Event.EVENT_MOUSE_ENTER)
+                handler && handler(enterEvent)
+            }
             if (event.name === Event.EVENT_MOUSE_MOVE) {
                 this.onMove(event)
             }
@@ -63,12 +124,23 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
             if (event.name === Event.EVENT_MOUSE_UP) {
                 this.onMouseUp(event)
             }
+            this._cachedPosition = event.position
             // if view has registered event
             if (this._registeredEvents.get(event.name)) {
                 const handler = this._registeredEvents.get(event.name)
                 handler && handler(event)
             }
             return true
+        }
+        if (this._cachedPosition !== null && this.resolveMouseLeave(event.position)) {
+            this.onMouseLeave(event)
+            if (this._registeredEvents.get(Event.EVENT_MOUSE_LEAVE)) {
+                const leaveEvent = new Event(Event.EVENT_MOUSE_LEAVE)
+                leaveEvent.position = event.position
+                const handler = this._registeredEvents.get(Event.EVENT_MOUSE_LEAVE)
+                handler && handler(leaveEvent)
+            }
+            this._cachedPosition = null
         }
         return false
     }
@@ -119,6 +191,7 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
                 }
             }
         }
+        this._cachedPosition = event.position
     }
 
     public trigger (event: Event): boolean {
@@ -178,18 +251,16 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
                 }
             }
         }
-        console.log(cords)
-        console.log(target)
         new TWEEN.Tween(cords)
-            .easing(TWEEN.Easing.Elastic.InOut)
-            .to(target, 3000)
+            .easing(TWEEN.Easing.Sinusoidal.Out)
+            .to(target, options.duration)
             .onUpdate(() => {
                 for (const key of Object.keys(cords)) {
                    if (cords.hasOwnProperty(key) && styleKeys.indexOf('_'.concat(key)) !== -1) {
                        Reflect.set(this.style, key, cords[key])
                    }
                    if (cords.hasOwnProperty(key) && positionKeys.indexOf('_'.concat(key)) !== -1) {
-                        Reflect.set(this.position, key, cords[key])
+                       Reflect.set(this.position, key, cords[key])
                     }
                 }
             })
@@ -198,8 +269,23 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
             })
             .start()
     }
+
+    public fillStyle (style: Style | null, context: CanvasRenderingContext2D | null | undefined): void {
+        if (style !== null && context !== null && context !== undefined) {
+            context.fillStyle = style.background
+            context.shadowColor = style.shadowColor
+            context.shadowBlur = style.shadowBlur
+            context.shadowOffsetX = style.shadowOffsetX
+            context.shadowOffsetY = style.shadowOffsetY
+        }
+    }
+
+    // noinspection JSMethodCanBeStatic
+    protected data (): any {
+        return {}
+    }
     /**
-     * bind chain data of view
+     * bind chain props of view
      */
     private bindData () {
         const handler = {
@@ -215,58 +301,18 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
             }
         }
         this._proxies.style = new Proxy(this._style, handler)
+        this._proxies.props = new Proxy(this._props, handler)
         this._proxies.position = new Proxy(this._position, handler)
     }
 
-
-
-    get draggable (): boolean {
-        return this._draggable
-    }
-
-    set draggable (value: boolean) {
-        this._draggable = value
-    }
-
-
-    get hydra (): Hydra | null {
-        return this._hydra
-    }
-
-    set hydra (value: Hydra | null) {
-        this._hydra = value
-    }
-
-    get state (): string {
-        return this._state
-    }
-
-    set state (value: string) {
-        this._state = value
-    }
-
-    get registeredEvents (): Map<string, (event: Event) => void> {
-        return this._registeredEvents
-    }
-
-    set registeredEvents (value: Map<string, (event: Event) => void>) {
-        this._registeredEvents = value
-    }
-
-    get position (): Position {
-        return this._proxies.position
-    }
-
-    set position (value: Position) {
-        this._position = value
-    }
-
-    get style (): Style {
-        return this._proxies.style
-    }
-
-    set style (value: Style) {
-        this._style = value
+    private resolveMouseLeave (position: Position | null) {
+        if (position === null) {
+            return false
+        }
+        const clientX = this.position.x + this.style.width
+        const clientY = this.position.y + this.style.height
+        return (position.x < this.position.x || position.x > clientX) ||
+            (position.y < this.position.y || position.y > clientY)
     }
 }
 

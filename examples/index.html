@@ -20,10 +20,10 @@
 
   view.style.width = 150
   view.style.height = 50
-  view.position.x = 0
+  view.style.zIndex = 5
+  view.position.x = 30
   view.position.y = 230
-  view.shadowHeight = 15
-  view.style.background = 'gold'
+  view.style.background = 'orange'
   view.draggable = true
 
   let viewTop = new window.View()
@@ -33,45 +33,18 @@
   viewTop.style.height = 200
   viewTop.draggable = true
 
-  let viewTest = new window.View()
-
-
-  viewTest.style.background = 'red'
-  viewTest.position.x = 300
-
-
   view.addEventListener('click', e => {
       viewTop.animate({
           style: {
-              width: 50,
-              height: 50
+              width: viewTop.style.width / 1.01,
+              height: viewTop.style.height / 1.01
           },
+          duration: 400,
           position: {
               x: 0,
               y: 0
           }
       })
-
-      setTimeout(() => {
-          view.animate({
-              style: {
-                  width: 150,
-                  height: 250
-              },
-              position: {
-                  x: 550,
-                  y: 45
-              }
-          })
-      }, 3000)
-  })
-
-  viewTop.addEventListener('mouse_down', e => {
-     console.log(e)
-  })
-
-  viewTop.addEventListener('mouse_up', e => {
-      console.log(e)
   })
 
   hydra
