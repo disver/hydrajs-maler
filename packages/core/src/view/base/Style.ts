@@ -1,19 +1,14 @@
-import Drawable from './Drawable'
-import Position from './Position'
-
-class View implements Drawable {
+class Style {
     private _width: number
     private _height: number
-    private _position: Position
-
-    // margin start
+    // margin register
     private _marginTop: number
     private _marginRight: number
     private _marginBottom: number
     private _marginLeft: number
     // margin end
 
-    // padding start
+    // padding register
     private _paddingTop: number
     private _paddingRight: number
     private _paddingBottom: number
@@ -21,38 +16,59 @@ class View implements Drawable {
     // padding end
 
     // background of view
-    private _background: string | number
-
+    private _background: string
     // z index
     private _zIndex: number
 
-    // map to resolve if should view should response when specific event appear
-    private _registeredEvents: Map<string, Event>
+    // shadow
+    private _shadowBlur: number
+    private _shadowColor: string
+    private _shadowOffsetX: number
+    private _shadowOffsetY: number
 
+    // start font
+    private _fontSize: number
+    private _fontColor: string
+    private _fontFamily: string
 
     constructor () {
         this._width = 0
         this._height = 0
-        this._background = 'black'
-        this._position = new Position()
         this._marginTop = 0
         this._marginRight = 0
         this._marginBottom = 0
         this._marginLeft = 0
         this._paddingTop = 0
         this._paddingRight = 0
+        this._shadowBlur = 0
+        this._shadowColor = ''
         this._paddingBottom = 0
+        this._shadowOffsetX = 0
+        this._shadowOffsetY = 0
+        this._marginTop = 0
         this._paddingLeft = 0
+        this._background = '#ffffff'
         this._zIndex = 0
-        this._registeredEvents = new Map<string, Event>()
+        this._fontColor = 'white'
+        this._fontSize = 14
+        this._fontFamily = 'Arial'
     }
 
 
-    public addEventListener (name: string, handler: () => void): any {
+    get shadowBlur (): number {
+        return this._shadowBlur
     }
 
+    set shadowBlur (value: number) {
+        this._shadowBlur = value
+    }
 
-    public render (context: CanvasRenderingContext2D | null | undefined) {
+    get shadowColor (): string {
+        return this._shadowColor
+    }
+
+    set shadowColor (value: string) {
+        this._shadowColor = value
     }
 
     get width (): number {
@@ -69,14 +85,6 @@ class View implements Drawable {
 
     set height (value: number) {
         this._height = value
-    }
-
-    get position (): Position {
-        return this._position
-    }
-
-    set position (value: Position) {
-        this._position = value
     }
 
     get marginTop (): number {
@@ -143,14 +151,6 @@ class View implements Drawable {
         this._paddingLeft = value
     }
 
-    get background (): string | number {
-        return this._background
-    }
-
-    set background (value: string | number) {
-        this._background = value
-    }
-
     get zIndex (): number {
         return this._zIndex
     }
@@ -158,6 +158,56 @@ class View implements Drawable {
     set zIndex (value: number) {
         this._zIndex = value
     }
+
+
+    get shadowOffsetX (): number {
+        return this._shadowOffsetX
+    }
+
+    set shadowOffsetX (value: number) {
+        this._shadowOffsetX = value
+    }
+
+    get shadowOffsetY (): number {
+        return this._shadowOffsetY
+    }
+
+    set shadowOffsetY (value: number) {
+        this._shadowOffsetY = value
+    }
+
+    get background (): string {
+        return this._background
+    }
+
+    set background (value: string) {
+        this._background = value
+    }
+
+
+    get fontSize (): number {
+        return this._fontSize
+    }
+
+    set fontSize (value: number) {
+        this._fontSize = value
+    }
+
+    get fontColor (): string {
+        return this._fontColor
+    }
+
+    set fontColor (value: string) {
+        this._fontColor = value
+    }
+
+    get fontFamily (): string {
+        return this._fontFamily
+    }
+
+    set fontFamily (value: string) {
+        this._fontFamily = value
+    }
 }
 
-export default View
+export default Style

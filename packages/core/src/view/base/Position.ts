@@ -1,7 +1,7 @@
-class Position {
-    private _x: number
-    private _y: number
 
+class Position {
+    private _x: number = 0
+    private _y: number = 0
 
     constructor (x: number = 0, y: number = 0) {
         this._x = x
