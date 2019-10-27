@@ -1,6 +1,7 @@
 import {
     Event,
     HydraRenderer,
+    LinearLayout,
     Position,
     View
 } from './core'
@@ -11,6 +12,7 @@ import {
 } from './engine'
 
 import {
+    Button,
     ShadowView
 } from './component'
 
@@ -19,7 +21,9 @@ export {
     HydraRenderer,
     SampleEventDispatcher,
     Event,
+    Button,
     ShadowView,
+    LinearLayout,
     View,
     Position
 }

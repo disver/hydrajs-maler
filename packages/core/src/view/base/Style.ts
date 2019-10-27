@@ -20,10 +20,16 @@ class Style {
     // z index
     private _zIndex: number
 
+    // shadow
     private _shadowBlur: number
     private _shadowColor: string
     private _shadowOffsetX: number
     private _shadowOffsetY: number
+
+    // start font
+    private _fontSize: number
+    private _fontColor: string
+    private _fontFamily: string
 
     constructor () {
         this._width = 0
@@ -43,6 +49,9 @@ class Style {
         this._paddingLeft = 0
         this._background = '#ffffff'
         this._zIndex = 0
+        this._fontColor = 'white'
+        this._fontSize = 14
+        this._fontFamily = 'Arial'
     }
 
 
@@ -173,6 +182,31 @@ class Style {
 
     set background (value: string) {
         this._background = value
+    }
+
+
+    get fontSize (): number {
+        return this._fontSize
+    }
+
+    set fontSize (value: number) {
+        this._fontSize = value
+    }
+
+    get fontColor (): string {
+        return this._fontColor
+    }
+
+    set fontColor (value: string) {
+        this._fontColor = value
+    }
+
+    get fontFamily (): string {
+        return this._fontFamily
+    }
+
+    set fontFamily (value: string) {
+        this._fontFamily = value
     }
 }
 

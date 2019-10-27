@@ -17,13 +17,6 @@ class ShadowView extends View{
         super.onMeasure()
     }
 
-    public render (context: CanvasRenderingContext2D | null | undefined): void {
-        super.render(context)
-        if (context !== null && context !== undefined) {
-            context.fillRect(this.position.x, this.position.y, this.style.width, this.style.height)
-        }
-    }
-
     public onMouseUp (event: Event): void {
         super.onMouseUp(event)
         this._status = 1

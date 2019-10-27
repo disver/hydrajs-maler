@@ -13,8 +13,10 @@ class HydraRenderer implements Renderer {
      * call view's render function and support context2D for view
      */
     public render (view: View, parent: Hydra) {
+        if (view.hydra === null) {
+            view.hydra = parent
+        }
         view.render(this.getContext())
-        view.hydra = parent
     }
 
     /**

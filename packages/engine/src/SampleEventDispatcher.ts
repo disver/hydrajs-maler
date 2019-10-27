@@ -49,19 +49,8 @@ class SampleEventDispatcher implements EventDispatcher {
                 event.button = e.button
                 event.position.x = e.offsetX
                 event.position.y = e.offsetY
-                let responseView = null
-                let res = false
                 for (const view of views) {
-                    if (responseView !== null && responseView === view) {
-                        this.dispatch(event, view)
-                    } else {
-                        res = this.dispatch(event, view)
-                        if (res) {
-                            responseView = view
-                        } else {
-                            view.state = 'static'
-                        }
-                    }
+                    this.dispatch(event, view)
                 }
             }
             canvas.onclick = e => dispatchEvent(Event.EVENT_CLICK, e)

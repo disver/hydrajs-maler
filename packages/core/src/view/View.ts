@@ -2,6 +2,7 @@
 import TWEEN from '@tweenjs/tween.js/dist/tween.esm.js'
 import DataProxy from '../../../engine/src/base/proxy/DataProxy'
 import Hydra from '../../../engine/src/Hydra'
+import {uuid} from '../../../tools/UUID'
 import Event from '../event/Event'
 import EventReceiver from '../event/EventReceiver'
 import AnimationSupport from './base/AnimationSupport'
@@ -10,64 +11,12 @@ import Position from './base/Position'
 import Style from './base/Style'
 
 class View extends DataProxy implements Drawable, EventReceiver, AnimationSupport {
-    get draggable (): boolean {
-        return this._draggable
-    }
-
-    set draggable (value: boolean) {
-        this._draggable = value
-    }
-
-
-    get hydra (): Hydra | null {
-        return this._hydra
-    }
-
-    set hydra (value: Hydra | null) {
-        this._hydra = value
-    }
-
-    get state (): string {
-        return this._state
-    }
-
-    set state (value: string) {
-        this._state = value
-    }
-
-    get registeredEvents (): Map<string, (event: Event) => void> {
-        return this._registeredEvents
-    }
-
-    set registeredEvents (value: Map<string, (event: Event) => void>) {
-        this._registeredEvents = value
-    }
-
-    get position (): Position {
-        return this._proxies.position
-    }
-
-    set position (value: Position) {
-        this._position = value
-    }
-
-
-    get props (): any {
-        return this._proxies.props
-    }
-
-    get style (): Style {
-        return this._proxies.style
-    }
-
-    set style (value: Style) {
-        this._style = value
-    }
+    public readonly _position: Position
+    public readonly _style: Style
+    public readonly _props: any
     private _hydra: Hydra | null
     private _state: string
-    private _position: Position
-    private _style: Style
-    private readonly _props: any
+    private readonly _token: string
     private _cachedPosition: Position | null = null
     private _draggable: boolean
 
@@ -84,6 +33,7 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
         this._position = new Position()
         this._hydra = null
         this._draggable = false
+        this._token = uuid()
         this._registeredEvents = new Map<string, () => void>()
         this._props = this.data()
         this.bindData()
@@ -101,7 +51,6 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
         }
     }
 
-
     public receive (event: Event): boolean {
         if (this.trigger(event)) {
             // call when first entered
@@ -109,14 +58,10 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
                 this.onMouseEnter(event)
                 const enterEvent = new Event(Event.EVENT_MOUSE_ENTER)
                 enterEvent.position = event.position
-                const handler = this._registeredEvents.get(Event.EVENT_MOUSE_ENTER)
-                handler && handler(enterEvent)
+                this.handleRegisteredEvent(enterEvent)
             }
             if (event.name === Event.EVENT_MOUSE_MOVE) {
                 this.onMove(event)
-            }
-            if (event.name === Event.EVENT_MOUSE_LEAVE) {
-                this.onMouseLeave(event)
             }
             if (event.name === Event.EVENT_MOUSE_DOWN) {
                 this.onMouseDown(event)
@@ -124,12 +69,7 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
             if (event.name === Event.EVENT_MOUSE_UP) {
                 this.onMouseUp(event)
             }
-            this._cachedPosition = event.position
-            // if view has registered event
-            if (this._registeredEvents.get(event.name)) {
-                const handler = this._registeredEvents.get(event.name)
-                handler && handler(event)
-            }
+            this.handleRegisteredEvent(event)
             return true
         }
         if (this._cachedPosition !== null && this.resolveMouseLeave(event.position)) {
@@ -186,8 +126,7 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
                     const dragEvent = new Event(Event.EVENT_MOUSE_DRAG)
                     dragEvent.position = event.position
                     dragEvent.button = event.button
-                    const handler = this._registeredEvents.get(Event.EVENT_MOUSE_DRAG)
-                    handler && handler(dragEvent)
+                    this.handleRegisteredEvent(dragEvent)
                 }
             }
         }
@@ -226,7 +165,6 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
             id = requestAnimationFrame(ani)
             TWEEN.update(time)
         }
-        requestAnimationFrame(ani)
         const cords: any = {}
         const positionKeys: string [] = Object.getOwnPropertyNames(this.position)
         const target: any = {}
@@ -268,6 +206,7 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
                 cancelAnimationFrame(id)
             })
             .start()
+        requestAnimationFrame(ani)
     }
 
     public fillStyle (style: Style | null, context: CanvasRenderingContext2D | null | undefined): void {
@@ -277,6 +216,15 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
             context.shadowBlur = style.shadowBlur
             context.shadowOffsetX = style.shadowOffsetX
             context.shadowOffsetY = style.shadowOffsetY
+            context.font = `${this.style.fontSize}px ${this.style.fontFamily}`
+        }
+    }
+
+    // noinspection JSMethodCanBeStatic
+    protected fetch (context: CanvasRenderingContext2D | null | undefined,
+                     callback: (ctx: CanvasRenderingContext2D) => void) {
+        if (context !== undefined && context !== null) {
+            callback && callback(context)
         }
     }
 
@@ -284,6 +232,15 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
     protected data (): any {
         return {}
     }
+
+    private handleRegisteredEvent (event: Event) {
+        // if view has registered event
+        if (this._registeredEvents.get(event.name)) {
+            const handler = this._registeredEvents.get(event.name)
+            handler && handler(event)
+        }
+    }
+
     /**
      * bind chain props of view
      */
@@ -313,6 +270,56 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
         const clientY = this.position.y + this.style.height
         return (position.x < this.position.x || position.x > clientX) ||
             (position.y < this.position.y || position.y > clientY)
+    }
+
+
+    get draggable (): boolean {
+        return this._draggable
+    }
+
+    set draggable (value: boolean) {
+        this._draggable = value
+    }
+
+
+    get hydra (): Hydra | null {
+        return this._hydra
+    }
+
+    set hydra (value: Hydra | null) {
+        this._hydra = value
+    }
+
+    get state (): string {
+        return this._state
+    }
+
+    set state (value: string) {
+        this._state = value
+    }
+
+    get registeredEvents (): Map < string, (event: Event) => void > {
+        return this._registeredEvents
+    }
+
+    set registeredEvents (value: Map<string, (event: Event) => void>) {
+        this._registeredEvents = value
+    }
+
+    get position (): Position {
+        return this._proxies.position
+    }
+
+    get props (): any {
+        return this._proxies.props
+    }
+
+    get style (): Style {
+        return this._proxies.style
+    }
+
+    get token (): string {
+        return this._token
     }
 }
 
