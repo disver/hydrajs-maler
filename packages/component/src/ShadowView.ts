@@ -1,7 +1,7 @@
 import Event from '../../core/src/event/Event'
 import View from '../../core/src/view/View'
 
-class ShadowView extends View{
+class ShadowView extends View {
     private _status: number = 1
 
     constructor () {

@@ -13,9 +13,8 @@
 <body>
 <div id="root" style="width: 100%;height: 100%;"></div>
 </body>
-<script src="../dist/bundle/hydra.es.js"></script>
+<script src="../../dist/bundle/hydra.es.js"></script>
 <script>
-
   var hydra = new window.Hydra(document.getElementById('root'))
   var button = new window.Button()
   var button2 = new window.Button()
@@ -25,19 +24,17 @@
   var layout = new window.LinearLayout()
   layout.position.x = 30
   layout.position.y = 30
-  layout.props.direction = 'horizontal'
-  layout.style.width = 300
+  // layout.props.direction = 'horizontal'
+  layout.style.width = 200
   layout.style.height = 200
   layout.draggable = true
 
   button.style.width = 100
   button.style.height = 40
   button.style.background = 'orange'
-  button.style.marginRight = 30
   button.style.marginBottom = 40
 
   button2.style.width = button.style.width
-  button2.style.marginRight = 10
   button2.style.height = 45
 
   button3.style.width = button.style.width
@@ -49,18 +46,18 @@
   button4.style.background = '#5f5f5f'
   button4.style.height = 60
 
-  button4.addEventListener('click', () => {
-      layout.animate({
-          position: {
-              x: 500,
-              y: 300
-          },
-          style: {
-              width: 500,
-              height: 500
-          }
-      })
-  })
+  // button4.addEventListener('click', () => {
+  //     layout.animate({
+  //         position: {
+  //             x: 500,
+  //             y: 300
+  //         },
+  //         style: {
+  //             width: 500,
+  //             height: 500
+  //         }
+  //     })
+  // })
 
 
   layout.attach(button)
