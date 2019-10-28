@@ -11,8 +11,10 @@ class SampleEventDispatcher implements EventDispatcher {
     get views (): View[] {
         return this._views.sort((left, right) => right.style.zIndex - left.style.zIndex)
     }
+
     private _canvas: HTMLCanvasElement | null | undefined
     private _views: View []
+
     constructor () {
         this._canvas = null
         this._views = []
@@ -53,9 +55,20 @@ class SampleEventDispatcher implements EventDispatcher {
                     this.dispatch(event, view)
                 }
             }
-            canvas.onclick = e => dispatchEvent(Event.EVENT_CLICK, e)
-            canvas.onmousedown = e => dispatchEvent(Event.EVENT_MOUSE_DOWN, e)
-            canvas.onmouseup = e => dispatchEvent(Event.EVENT_MOUSE_UP, e)
+            // record mouse down event
+            let mouseDownEvent: any
+            canvas.onmousedown = e => {
+                mouseDownEvent = e
+                dispatchEvent(Event.EVENT_MOUSE_DOWN, e)
+            }
+            canvas.onmouseup = e => {
+                // if move less than two unit dispatch click event
+                if (Math.abs(e.offsetX - mouseDownEvent.offsetX) < 2
+                    && Math.abs(e.offsetY - mouseDownEvent.offsetY) < 2) {
+                    dispatchEvent(Event.EVENT_CLICK, e)
+                }
+                dispatchEvent(Event.EVENT_MOUSE_UP, e)
+            }
             canvas.onmousemove = e => dispatchEvent(Event.EVENT_MOUSE_MOVE, e)
         }
     }

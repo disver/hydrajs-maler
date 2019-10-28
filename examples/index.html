@@ -15,6 +15,7 @@
 </body>
 <script src="../dist/bundle/hydra.es.js"></script>
 <script>
+
   var hydra = new window.Hydra(document.getElementById('root'))
   var button = new window.Button()
   var button2 = new window.Button()
@@ -67,8 +68,24 @@
   layout.attach(button3)
   layout.attach(button4)
 
-  hydra
-      .attach(layout)
-      .render()
+  let image = new Image()
+  image.onload = function () {
+    console.log(image)
+    let imageView = new ImageView(image)
+    imageView.addEventListener('click', () => {
+      window.alert('不要')
+    })
+    imageView.style.width = image.width
+    imageView.style.height = image.height
+    imageView.style.zIndex = -999
+    imageView.draggable = true
+    hydra
+        .attach(layout)
+        .attach(imageView)
+        .render()
+  }
+  image.src = './resource/vim.png'
+
+
 </script>
 </html>

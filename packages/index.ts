@@ -13,6 +13,7 @@ import {
 
 import {
     Button,
+    ImageView,
     ShadowView
 } from './component'
 
@@ -23,6 +24,7 @@ export {
     Event,
     Button,
     ShadowView,
+    ImageView,
     LinearLayout,
     View,
     Position
