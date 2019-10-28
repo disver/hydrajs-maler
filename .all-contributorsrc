@@ -1,0 +1,45 @@
+{
+  "projectName": "@hydrajs/maler",
+  "projectOwner": "DISVER",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "eslint",
+  "contributors": [
+    {
+      "login": "4everlynn",
+      "name": "Edward Jobs",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/31912843?v=4",
+      "profile": "https://github.com/4everlynn",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "jbhim",
+      "name": "jbhim",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/31913489?v=4",
+      "profile": "https://github.com/jbhim",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "RookieEngineerG",
+      "name": "ztrue",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/41447331?v=4",
+      "profile": "https://github.com/RookieEngineerG",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}

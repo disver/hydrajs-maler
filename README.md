@@ -1,4 +1,5 @@
 [![Build Status](https://www.travis-ci.org/disver/hydrajs-maler.svg?branch=master)](https://www.travis-ci.org/disver/hydrajs-maler)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 
 
 ***
@@ -17,8 +18,23 @@ At the same time, the form of iframe embedding also makes many elements of the p
 
    After the free time, we decided to develop a Canvas view framework in the team meeting, which can be used to conveniently build the view, so Hydra.js was born.
 
----
-
 ## Documentation
 
 We are speeding up the creation of documents, which will be published later on `Git Page`.
+
+## Contributors ✨
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/4everlynn"><img src="https://avatars1.githubusercontent.com/u/31912843?v=4" width="100px;" alt="Edward Jobs"/><br /><sub><b>Edward Jobs</b></sub></a><br /><a href="https://github.com/DISVER/@hydrajs/maler/commits?author=4everlynn" title="Code">💻</a> <a href="https://github.com/DISVER/@hydrajs/maler/commits?author=4everlynn" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/jbhim"><img src="https://avatars1.githubusercontent.com/u/31913489?v=4" width="100px;" alt="jbhim"/><br /><sub><b>jbhim</b></sub></a><br /><a href="https://github.com/DISVER/@hydrajs/maler/commits?author=jbhim" title="Code">💻</a> <a href="https://github.com/DISVER/@hydrajs/maler/commits?author=jbhim" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/RookieEngineerG"><img src="https://avatars3.githubusercontent.com/u/41447331?v=4" width="100px;" alt="ztrue"/><br /><sub><b>ztrue</b></sub></a><br /><a href="https://github.com/DISVER/@hydrajs/maler/commits?author=RookieEngineerG" title="Code">💻</a> <a href="https://github.com/DISVER/@hydrajs/maler/commits?author=RookieEngineerG" title="Documentation">📖</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
