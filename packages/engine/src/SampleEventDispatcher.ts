@@ -34,7 +34,7 @@ class SampleEventDispatcher implements EventDispatcher {
     }
 
     public register (): void {
-        this.forward(this._views)
+        this.forward(this.views)
     }
 
     public dispatch (event: Event, view: View): boolean {

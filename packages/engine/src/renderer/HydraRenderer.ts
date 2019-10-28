@@ -1,5 +1,5 @@
-import Hydra from '../../../engine/src/Hydra'
-import View from '../view/View'
+import View from '../../../core/src/view/View'
+import Hydra from '../Hydra'
 import Renderer from './Renderer'
 
 class HydraRenderer implements Renderer {

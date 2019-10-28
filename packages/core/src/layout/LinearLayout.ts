@@ -45,7 +45,8 @@ class LinearLayout extends Layout{
             if (index > 0) {
                 const lastView = this.children[index - 1]
                 // view's position overflow in single line
-                if ((view.position.x + view.style.width) > (this.position.x + this.style.width)) {
+                if ((view.position.x + view.style.width + lastView.style.marginRight
+                    + view.style.marginLeft + view.style.marginRight) > (this.position.x + this.style.width)) {
                     view._position.x = this.position.x + view.style.marginLeft
                     pos.x = this.position.x + view.style.marginLeft
                     let maxBottom = 0
@@ -76,6 +77,22 @@ class LinearLayout extends Layout{
                     if (view.style.height > maxHeights[line]) {
                         maxHeights[line] = view.style.height
                     }
+                    let maxBottom = 0
+                    // get last line's views
+                    const temp = temporaryViews.get(line - 1)
+                    if (temp !== undefined) {
+                        for (const v of temp) {
+                            if (view.position.x >=
+                                v.position.x && view.position.x <= (v.position.x + v.style.width))  {
+                                const marginBottom = v.style.marginBottom
+                                if (marginBottom > maxBottom) {
+                                    maxBottom = marginBottom
+                                }
+                            }
+                        }
+                        view._position.y += maxHeights[line - 1] + maxBottom
+                        pos.y += maxHeights[line - 1]
+                    }
                 }
             }
             view.render(ctx)
@@ -86,7 +103,20 @@ class LinearLayout extends Layout{
 
     // noinspection JSMethodCanBeStatic
     private renderVertical (ctx: CanvasRenderingContext2D) {
-        console.log(ctx)
+        let index = 0
+        const position = new Position(this.position.x, this.position.y)
+        for (const view of this.children) {
+            view._position.x = position.x + view.style.marginLeft + this.style.paddingLeft - view.style.marginRight
+            if (index === 0) {
+                view._position.y = position.y + view.style.marginTop + this.style.paddingTop
+            } else {
+                const lastView = this.children[index - 1]
+                view._position.y = lastView.position.y +
+                    lastView.style.height + lastView.style.marginBottom + view.style.marginTop
+            }
+            view.render(ctx)
+            index++
+       }
     }
 }
 

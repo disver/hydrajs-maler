@@ -1,6 +1,5 @@
 import {
     Event,
-    HydraRenderer,
     LinearLayout,
     Position,
     View
@@ -8,6 +7,7 @@ import {
 
 import {
     Hydra,
+    HydraRenderer,
     SampleEventDispatcher
 } from './engine'
 
