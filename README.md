@@ -1,5 +1,8 @@
 [![Build Status](https://www.travis-ci.org/disver/hydrajs-maler.svg?branch=master)](https://www.travis-ci.org/disver/hydrajs-maler)
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+
 
 
 ***
