@@ -47,7 +47,7 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
     public render (context: CanvasRenderingContext2D | null | undefined) {
         if (context instanceof CanvasRenderingContext2D) {
             this.fillStyle(this.style, context)
-            context.fillRect(this._position.x, this._position.y, this._style.width, this._style.height)
+            // context.fillRect(this._position.x, this._position.y, this._style.width, this._style.height)
         }
     }
 

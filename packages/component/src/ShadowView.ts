@@ -29,6 +29,13 @@ class ShadowView extends View {
     }
 
 
+    public render (context: CanvasRenderingContext2D | null | undefined): void {
+        super.render(context)
+        this.fetch(context, ctx => {
+            ctx.fillRect(this._position.x, this._position.y, this._style.width, this._style.height)
+        })
+    }
+
     public onMouseEnter (event: Event): void {
         super.onMouseEnter(event)
         this.animate({
