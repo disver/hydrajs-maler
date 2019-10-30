@@ -7,8 +7,6 @@ class LinearLayout extends Layout{
     public render (context: CanvasRenderingContext2D | null | undefined): void {
         super.render(context)
         this.fetch(context, ctx => {
-            ctx.strokeStyle = 'black'
-            ctx.strokeRect(this.position.x, this.position.y, this.style.width, this.style.height)
             if (this.props.direction === 'horizontal') {
                 this.renderHorizontal(ctx)
             }
@@ -25,68 +23,124 @@ class LinearLayout extends Layout{
         }
     }
 
+    // noinspection JSMethodCanBeStatic
     private renderHorizontal (ctx: CanvasRenderingContext2D) {
         let index = 0
-        // record last view's position
-        const pos = new Position(this.position.x, this.position.y)
-        const temporaryViews = new Map<number, View []>()
-        const maxHeights: any = {}
-        let line = 0
-        for (const view of this.children) {
-            view._position.x = pos.x + view.style.marginLeft
-            view._position.y = pos.y + view.style.marginTop
-            if (temporaryViews.get(line) === undefined) {
-                temporaryViews.set(line, [view])
+        const containerBounds = {
+            startX: this.position.x,
+            endX: this.position.x + this.style.width,
+            startY: this.position.y,
+            endY: this.position.y + this.style.height
+        }
+        // record views of each line
+        const viewsOfLine: any = {}
+        let currentLine = 0
+
+        // push view to current line's array
+        const push = (view: View) => {
+            if (viewsOfLine[currentLine] === undefined) {
+                viewsOfLine[currentLine] = [view]
+            } else {
+                viewsOfLine[currentLine].push(view)
             }
-            if (maxHeights[line] === undefined) {
-                maxHeights[line] = view.style.height
+        }
+
+        // container position
+        const position = new Position(this.position.x, this.position.y)
+        const children = this.children
+        const renderFirstViewInLine = (view: View) => {
+            view._position.x = position.x + view.style.marginLeft +
+                this.style.paddingLeft - this.style.paddingRight - view.style.marginRight
+            view._position.y = this.position.y + view.style.marginTop + this.style.paddingTop
+            // push view
+            push(view)
+        }
+        const renderOtherView = (view: View) => {
+            const lastView = children[index - 1]
+            const targetX = lastView.position.x + lastView.style.width + view.style.marginLeft
+                + lastView.style.marginRight - view.style.marginRight
+            view._position.x = targetX
+            if (targetX + view.style.width > containerBounds.endX) {
+                // plus currentLine when view in single line is overflow
+                currentLine++
+                // overflow in single line
+                view._position.x = position.x + view.style.marginLeft + this.style.paddingLeft
+                    - view.style.marginRight
+            } else {
+                view._position.x = targetX
             }
-            const currentLine = temporaryViews.get(line)
+            this.resolveYOfView(view, currentLine, viewsOfLine)
+            // push view
+            push(view)
+        }
+        for (const view of children) {
             if (index > 0) {
-                const lastView = this.children[index - 1]
-                // view's position overflow in single line
-                if ((view.position.x + view.style.width) > (this.position.x + this.style.width)) {
-                    view._position.x = this.position.x + view.style.marginLeft
-                    pos.x = this.position.x + view.style.marginLeft
-                    let maxBottom = 0
-                    // get last line's views
-                    const temp = temporaryViews.get(line)
-                    if (temp !== undefined) {
-                        for (const v of temp) {
-                            if (view.position.x >=
-                                v.position.x && view.position.x <= (v.position.x + v.style.width))  {
-                                const marginBottom = v.style.marginBottom
-                                if (marginBottom > maxBottom) {
-                                    maxBottom = marginBottom
-                                }
-                            }
-                        }
-                        view._position.y += maxHeights[line] + maxBottom
-                        pos.y += maxHeights[line]
-                    }
-                    line++
-                    temporaryViews.set(line, [view])
-                    maxHeights[line] = view.style.height
-                } else {
-                    view._position.x += lastView.style.marginRight
-                    pos.x += lastView.style.marginRight
-                    if (currentLine !== undefined) {
-                        currentLine.push(view)
-                    }
-                    if (view.style.height > maxHeights[line]) {
-                        maxHeights[line] = view.style.height
-                    }
-                }
+                renderOtherView(view)
+            } else {
+                renderFirstViewInLine(view)
             }
             view.render(ctx)
-            pos.x += view.style.width
             index++
         }
     }
 
+    private resolveYOfView (view: View, currentLine: number, viewsOfLine: any) {
+        // deal style
+        if (currentLine > 0) {
+            const lastLine: View [] = viewsOfLine[currentLine - 1]
+            let bottom = 0
+            let y = 0
+            for (const lastLineView of lastLine) {
+                if (this.boundsInRange(view, lastLineView)) {
+                    if (y < lastLineView.style.height + lastLineView.position.y) {
+                        y = lastLineView.style.height + lastLineView.position.y
+                    }
+                    if (bottom < lastLineView.style.marginBottom) {
+                        bottom = lastLineView.style.marginBottom
+                    }
+                }
+            }
+            view._position.y = y + bottom + view.style.marginTop
+        } else {
+            view._position.y = this.position.y + this.style.paddingTop + view.style.marginTop
+        }
+    }
+
+    // noinspection JSMethodCanBeStatic
+    private boundsInRange (left: View, right: View): boolean {
+        if (left.position.x === right.position.x + right.style.width) {
+            return false
+        }
+        if (left.position.x + left.style.width === right.position.x) {
+            return false
+        }
+        if (left.position.x >= right.position.x) {
+            return true
+        }
+        if (left.position.x + left.style.width <= right.position.x + right.style.width )  {
+            return true
+        }
+        return left.position.x + left.style.width >= left.position.x
+    }
+
     // noinspection JSMethodCanBeStatic
     private renderVertical (ctx: CanvasRenderingContext2D) {
-        console.log(ctx)
+        let index = 0
+        const position = new Position(this.position.x, this.position.y)
+        const children = this.children
+        for (const view of children) {
+            view._position.x = position.x + view.style.marginLeft + this.style.paddingLeft
+                - view.style.marginRight
+            if (index === 0) {
+                view._position.y = position.y + view.style.marginTop + this.style.paddingTop
+            } else {
+                const lastView = children[index - 1]
+                view._position.y = lastView.position.y +
+                    lastView.style.height + lastView.style.marginBottom + view.style.marginTop
+            }
+            view.render(ctx)
+            index++
+       }
     }
 }
 

@@ -29,7 +29,7 @@ abstract class Layout extends View implements Container {
     public receive (event: Event): boolean {
         super.receive(event)
         // dispatch to children views
-        for (const view of this._children) {
+        for (const view of this.children) {
             view.receive(event)
         }
         return true
@@ -37,7 +37,7 @@ abstract class Layout extends View implements Container {
 
 
     get children (): View[] {
-        return this._children
+        return this._children.sort((left, right) => right.style.zIndex - left.style.zIndex)
     }
 }
 

@@ -1,11 +1,12 @@
-import HydraRenderer from '../../core/src/renderer/HydraRenderer'
+import Container from '../../core/src/layout/base/Container'
 import View from '../../core/src/view/View'
 import EventDispatcher from './base/EventDispatcher'
+import HydraRenderer from './renderer/HydraRenderer'
 import SampleEventDispatcher from './SampleEventDispatcher'
 /**
  * @author 4everlynn
  */
-class Hydra {
+class Hydra implements Container{
     private readonly _views: View[]
     private _renderer: HydraRenderer
     private readonly _canvas: HTMLCanvasElement

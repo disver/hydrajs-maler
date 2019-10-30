@@ -47,7 +47,6 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
     public render (context: CanvasRenderingContext2D | null | undefined) {
         if (context instanceof CanvasRenderingContext2D) {
             this.fillStyle(this.style, context)
-            context.fillRect(this._position.x, this._position.y, this._style.width, this._style.height)
         }
     }
 
@@ -217,7 +216,23 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
             context.shadowOffsetX = style.shadowOffsetX
             context.shadowOffsetY = style.shadowOffsetY
             context.font = `${this.style.fontSize}px ${this.style.fontFamily}`
+            context.strokeStyle = this.style.borderColor
+            context.lineWidth = this.style.borderWeight
+            if (this.style.borderWeight !== 0) {
+                // deal border
+                context.strokeRect(this.position.x - this.style.borderWeight,
+                    this.position.y - this.style.borderWeight,
+                    this.style.width + this.style.borderWeight * 2,
+                    this.style.height + this.style.borderWeight * 2)
+            }
+            this.afterFill(context)
         }
+    }
+
+    // noinspection JSMethodCanBeStatic
+    public afterFill (context: CanvasRenderingContext2D) {
+        context.lineWidth = 0
+        context.strokeStyle = ''
     }
 
     // noinspection JSMethodCanBeStatic

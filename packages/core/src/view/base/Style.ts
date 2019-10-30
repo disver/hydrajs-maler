@@ -31,6 +31,10 @@ class Style {
     private _fontColor: string
     private _fontFamily: string
 
+    // start border
+    private _borderColor: string
+    private _borderWeight: number
+
     constructor () {
         this._width = 0
         this._height = 0
@@ -52,8 +56,26 @@ class Style {
         this._fontColor = 'white'
         this._fontSize = 14
         this._fontFamily = 'Arial'
+        this._borderColor = 'white'
+        this._borderWeight = 0
     }
 
+
+    get borderColor (): string {
+        return this._borderColor
+    }
+
+    set borderColor (value: string) {
+        this._borderColor = value
+    }
+
+    get borderWeight (): number {
+        return this._borderWeight
+    }
+
+    set borderWeight (value: number) {
+        this._borderWeight = value
+    }
 
     get shadowBlur (): number {
         return this._shadowBlur
