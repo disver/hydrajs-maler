@@ -1,7 +1,7 @@
 import View from '../../core/src/view/View'
 
 
-class ImageView extends View {
+class ImageView extends View{
     constructor (image: CanvasImageSource | string) {
         super()
         this._props.resource = image
@@ -11,15 +11,15 @@ class ImageView extends View {
 
     public render (context: CanvasRenderingContext2D | null | undefined): void {
         super.render(context)
-        this.fetch(context, ctx => {
+        if (context !== undefined && context !== null) {
             if (this.props.resource instanceof SVGImageElement) {
-                ctx.drawImage(this.props.resource, 0, 0)
+                context.drawImage(this.props.resource, 0, 0)
             } else if (this.props.resource instanceof Image) {
                 if (this.props.resource.complete) {
-                    this.renderImage(ctx, this.props.resource)
+                    this.renderImage(context, this.props.resource)
                 } else {
                     this.props.resource.onload = () => {
-                        this.renderImage(ctx, this.props.resource)
+                        this.renderImage(context, this.props.resource)
                     }
                 }
             } else if (Object.prototype.toString.call(this.props.resource) === '[object String]') {
@@ -27,10 +27,10 @@ class ImageView extends View {
                 image.src = this.props.resource
                 this._props.resource = image
                 image.onload = () => {
-                    this.renderImage(ctx, image)
+                    this.renderImage(context, image)
                 }
             }
-        })
+        }
     }
 
     protected data (): any {
