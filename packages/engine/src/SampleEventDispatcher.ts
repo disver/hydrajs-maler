@@ -51,7 +51,12 @@ class SampleEventDispatcher implements EventDispatcher {
                 event.button = e.button
                 event.position.x = e.offsetX
                 event.position.y = e.offsetY
-                for (const view of views) {
+                const tmpViews: View[] = [...views].reverse()
+                for (const view of tmpViews) {
+                    if ((name === Event.EVENT_CLICK || name === Event.EVENT_MOUSE_DOWN) && view.trigger(event)){
+                        this.dispatch(event, view)
+                        break
+                    }
                     this.dispatch(event, view)
                 }
             }
@@ -63,8 +68,8 @@ class SampleEventDispatcher implements EventDispatcher {
             }
             canvas.onmouseup = e => {
                 // if move less than two unit dispatch click event
-                if (Math.abs(e.offsetX - mouseDownEvent.offsetX) < 2
-                    && Math.abs(e.offsetY - mouseDownEvent.offsetY) < 2) {
+                if (Math.abs(e.offsetX - mouseDownEvent.offsetX) < 1
+                    && Math.abs(e.offsetY - mouseDownEvent.offsetY) < 1) {
                     dispatchEvent(Event.EVENT_CLICK, e)
                 }
                 dispatchEvent(Event.EVENT_MOUSE_UP, e)

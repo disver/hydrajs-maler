@@ -25,7 +25,7 @@
   layout.position.x = 30
   layout.position.y = 30
   layout.props.direction = 'horizontal'
-  layout.style.width = 200
+  layout.style.width = 100
   layout.style.height = 200
   layout.draggable = true
   layout.style.borderWeight = 3
@@ -79,6 +79,17 @@
       })
   })
 
+  let vim = new ImageView('../resource/vim.png')
+  vim.position.x = 300
+  vim.position.y = 200
+  vim.style.height = 800
+  vim.style.width = 1000
+  vim.draggable = true
+  vim.style.zIndex = -10000
+  vim.addEventListener('click', ()=>{
+    alert('vim')
+  })
+
   imageView.style.width = 200
   imageView.style.height = 70
   imageView.style.zIndex = -999
@@ -86,6 +97,7 @@
   layout.attach(imageView)
   hydra
       .attach(layout)
+      .attach(vim)
       .render()
 
 </script>

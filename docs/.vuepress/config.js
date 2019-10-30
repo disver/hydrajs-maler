@@ -2,8 +2,8 @@ module.exports = {
     title: 'Hydra.js',
     description: 'A Javascript library for working with Canvas.',
     serviceWorker: true,
-    base: './',
-    dest: 'dist',
+    // base: './',
+    // dest: 'dist',
     themeConfig: {
         sidebar: [
             {
