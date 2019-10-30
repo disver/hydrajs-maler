@@ -2,23 +2,36 @@
   "name": "@hydrajs/maler",
   "version": "1.0.0",
   "scripts": {
-    "build:cmjs": "tsc -P tsconfig.json --target ES5 --module COMMONJS --outDir dist",
-    "build:es6": "tsc -P tsconfig.json --target ES6 --module ES6 --outDir dist",
-    "build": "npm run build:cmjs",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts",
+    "start": "rollup -c rollup.config.ts -w",
+    "doc:dev": "vuepress dev docs",
+    "doc:build": "vuepress build docs",
     "test": "jest"
   },
   "description": "A Javascript library for working with Canvas.",
-  "main": "index.js",
+  "main": "packages/index.js",
   "repository": "https://github.com/disver/hydrajs-maler.git",
   "author": "DISVER",
   "license": "MIT",
   "devDependencies": {
-    "jest-canvas-mock": "^2.1.2",
-    "tslint": "^5.20.0",
+    "@tweenjs/tween.js": "^18.3.1",
     "@types/jest": "^24.0.6",
+    "@types/rollup-plugin-json": "^3.0.2",
+    "@types/rollup-plugin-node-resolve": "^4.1.0",
+    "@types/rollup-plugin-sourcemaps": "^0.4.2",
     "jest": "^24.1.0",
+    "jest-canvas-mock": "^2.1.2",
+    "lodash.camelcase": "^4.3.0",
+    "rollup": "^1.24.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript2": "^0.24.3",
     "ts-jest": "^24.0.0",
-    "typescript": "^3.6.4"
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.4",
+    "vuepress": "^1.2.0"
   },
   "dependencies": {}
 }
