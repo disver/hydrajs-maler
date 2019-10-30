@@ -7,8 +7,6 @@ class LinearLayout extends Layout{
     public render (context: CanvasRenderingContext2D | null | undefined): void {
         super.render(context)
         this.fetch(context, ctx => {
-            ctx.strokeStyle = 'black'
-            ctx.strokeRect(this.position.x, this.position.y, this.style.width, this.style.height)
             if (this.props.direction === 'horizontal') {
                 this.renderHorizontal(ctx)
             }
@@ -51,8 +49,8 @@ class LinearLayout extends Layout{
         const position = new Position(this.position.x, this.position.y)
         const children = this.children
         const renderFirstViewInLine = (view: View) => {
-            view._position.x = position.x + view.style.marginLeft + this.style.paddingLeft
-                - view.style.marginRight
+            view._position.x = position.x + view.style.marginLeft +
+                this.style.paddingLeft - this.style.paddingRight - view.style.marginRight
             view._position.y = this.position.y + view.style.marginTop + this.style.paddingTop
             // push view
             push(view)

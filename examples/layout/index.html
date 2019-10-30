@@ -24,65 +24,69 @@
   var layout = new window.LinearLayout()
   layout.position.x = 30
   layout.position.y = 30
-  // layout.props.direction = 'horizontal'
+  layout.props.direction = 'horizontal'
   layout.style.width = 200
   layout.style.height = 200
   layout.draggable = true
+  layout.style.borderWeight = 3
+  layout.style.borderColor = '#ff5159'
 
   button.style.width = 100
   button.style.height = 40
   button.style.background = 'orange'
+  button.props.name = '按钮1'
   button.style.marginBottom = 40
 
   button2.style.width = button.style.width
   button2.style.height = 45
+  button2.props.name = '按钮2'
 
   button3.style.width = button.style.width
   button3.style.background = '#e2e2e2'
   button3.style.height = 50
+  button3.props.name = '按钮3'
 
   button4.style.width = button.style.width
   button4.style.fontColor = 'gold'
   button4.style.background = '#5f5f5f'
+  button4.props.name = '按钮4'
   button4.style.height = 60
-
-  // button4.addEventListener('click', () => {
-  //     layout.animate({
-  //         position: {
-  //             x: 500,
-  //             y: 300
-  //         },
-  //         style: {
-  //             width: 500,
-  //             height: 500
-  //         }
-  //     })
-  // })
-
 
   layout.attach(button)
   layout.attach(button2)
   layout.attach(button3)
   layout.attach(button4)
 
-  let image = new Image()
-  image.onload = function () {
-    console.log(image)
-    let imageView = new ImageView(image)
-    imageView.addEventListener('click', () => {
-      window.alert('不要')
-    })
-    imageView.style.width = image.width
-    imageView.style.height = image.height
-    imageView.style.zIndex = -999
-    imageView.draggable = true
-    hydra
-        .attach(layout)
-        .attach(imageView)
-        .render()
-  }
-  image.src = '../resource/vim.png'
+  let imageView = new window.ImageView('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1572372212675&di=d89a44cf835534b815f07398b8788a2c&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201607%2F26%2F20160726154240_tTHxv.jpeg')
 
+  imageView.addEventListener('mouse_enter', () => {
+      imageView.animate({
+          style: {
+              width: 720,
+              height: 480
+          },
+          duration: 500
+      })
+  })
+
+  imageView.addEventListener('mouse_leave', () => {
+      imageView.animate({
+          style: {
+              width: 200,
+              height: 70
+          },
+          duration: 500
+      })
+  })
+
+  imageView.style.width = 200
+  imageView.style.height = 70
+  imageView.style.zIndex = -999
+  imageView.draggable = true
+  layout.attach(imageView)
+  hydra
+      .attach(layout)
+      .render()
 
 </script>
 </html>

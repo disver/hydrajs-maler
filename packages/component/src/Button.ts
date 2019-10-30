@@ -16,8 +16,8 @@ class Button extends ShadowView {
             }
             ctx.fillStyle = this.style.fontColor
             ctx.fillText(this.props.name, this.position.x + this.style.width / 2,
-                this.position.y + this.style.fontSize / 4 + this.style.height / 2
-                ,  this.style.width)
+                this.position.y + this.style.fontSize / 4 + this.style.height / 2,
+                this.style.width)
         })
     }
 

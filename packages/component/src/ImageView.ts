@@ -7,8 +7,6 @@ class ImageView extends View{
         this._props.resource = image
     }
 
-
-
     public render (context: CanvasRenderingContext2D | null | undefined): void {
         super.render(context)
         if (context !== undefined && context !== null) {
