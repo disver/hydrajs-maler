@@ -99,6 +99,7 @@
   vim.style.width = 1000
   vim.draggable = true
   vim.style.zIndex = -10000
+  vim.cropImage(0, 0 ,100,100)
 
   vim.addEventListener('click', ()=>{
     alert('vim')
@@ -111,6 +112,7 @@
   layout.attach(imageView)
   hydra
       .attach(layout)
+      .attach(vim)
       .render()
 
 </script>

@@ -18,107 +18,132 @@
 </body>
 <script src="../../dist/bundle/hydra.es.js"></script>
 <script>
-    const resources = {
-        background: new ImageResource('../resource/background.png'),
-        land: new ImageResource('../resource/land.png'),
-        pencilUp: new ImageResource('../resource/pie_up.png')
-    }
+  const resources = {
+    background: new ImageResource('../resource/background.png'),
+    land: new ImageResource('../resource/land.png'),
+    pencilUp: new ImageResource('../resource/pie_up.png'),
+    bird: new ImageResource('../resource/bird.png')
+  }
 
-    function obj2Array(obj) {
-        let arr = []
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                arr.push(obj[key])
-            }
-        }
-        return arr
+  function obj2Array(obj) {
+    let arr = []
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        arr.push(obj[key])
+      }
     }
+    return arr
+  }
 
-    var res = obj2Array(resources)
+  var res = obj2Array(resources)
 </script>
 <!--JSUndefinedPropertyAssignment -->
 <script>
-    function main() {
-        const hydra = new Hydra(document.getElementById('root'))
-        const layout = new AbsoluteLayout()
-        layout.style.width = 480
-        layout.style.height = 720
-        layout.position.x = 30
-        layout.position.y = 30
-        layout.draggable = true
+  function main() {
+    const hydra = new Hydra(document.getElementById('root'))
+    const layout = new AbsoluteLayout()
+    layout.style.width = 480
+    layout.style.height = 720
+    layout.position.x = 30
+    layout.position.y = 30
+    layout.draggable = true
 
-        const background = new ImageView(resources.background.target)
-        background.style.width = layout.style.width
-        background.style.height = layout.style.height * 0.8
-        background.style.top = 0
+    const background = new ImageView(resources.background.target)
+    background.style.width = layout.style.width
+    background.style.height = layout.style.height * 0.8
+    background.style.top = 0
 
-        const land = new ImageView(resources.land.target)
-        land.style.width = layout.style.width
-        land.style.height = layout.style.height * 0.2
-        land.style.bottom = 0
+    const land = new ImageView(resources.land.target)
+    land.style.width = layout.style.width
+    land.style.height = layout.style.height * 0.2
+    land.style.bottom = 0
 
-        const landHide = new ImageView(resources.land.target)
-        landHide.style.width = layout.style.width
-        landHide.style.height = layout.style.height * 0.2
-        landHide.style.bottom = 0
-        landHide.style.left = land.style.width
+    const landHide = new ImageView(resources.land.target)
+    landHide.style.width = layout.style.width
+    landHide.style.height = layout.style.height * 0.2
+    landHide.style.bottom = 0
+    landHide.style.left = land.style.width
 
-        const pencil = new ImageView(resources.pencilUp.target)
-        pencil.style.width = layout.style.width * 0.075
-        pencil.style.height = layout.style.height * 0.6
-        pencil.style.top = -200
-        pencil.style.left = layout.style.width
+    const pencil = new ImageView(resources.pencilUp.target)
+    pencil.style.width = layout.style.width * 0.075
+    pencil.style.height = layout.style.height * 0.6
+    pencil.style.top = -200
+    pencil.style.left = layout.style.width
 
-        const button = new Button()
-        button.style.width = 100
-        button.style.height = 30
-        button.style.left = layout.style.width / 2 - button.style.width / 2
-        button.style.top = layout.style.height / 2
-        button.props.name = '暂 停'
+    const bird = new ImageView(resources.bird.target)
 
-        let status = 0
+    bird.style.width = 52
+    bird.style.height = 45
+    bird.style.top = layout.style.height * 0.5 - 45 / 2
+    bird.style.left = 52
 
-        button.addEventListener(Event.EVENT_CLICK, () => {
-            if (status === 0) {
-                status = 1
-                button.props.name = '播 放'
-                cancelAnimationFrame(watchId)
-            } else if (status === 1) {
-                status = 0
-                button.props.name = '暂 停'
-                run()
-            }
-        })
-
-        layout.attach(background)
-        layout.attach(land)
-        layout.attach(landHide)
-        layout.attach(pencil)
-        layout.attach(button)
-
-        hydra
-            .attach(layout)
-            .render()
-
-        let watchId = 0
-        const run = () => {
-            land.style.left--
-            pencil.style.left--
-            if (land.style.left === -land.style.width) {
-                land.style.left = land.style.width
-            }
-            landHide.style.left--
-            if (landHide.style.left === -landHide.style.width) {
-                landHide.style.left = land.style.width
-            }
-            watchId = requestAnimationFrame(() => run())
+    function fly() {
+      let x = 0
+      bird.cropImage(x, 0, 52, 45)
+      let _birdFly = setInterval(() => {
+        x += 52
+        if (x >= 156) {
+          x = 0
         }
-        run()
+        bird.cropImage(x, 0, 52, 45)
+      }, 150)
+      return _birdFly
     }
+    let birdFly = fly()
+
+    const button = new Button()
+    button.style.width = 100
+    button.style.height = 30
+    button.style.left = layout.style.width / 2 - button.style.width / 2
+    button.style.top = layout.style.height / 2
+    button.props.name = '暂 停'
+
+    let status = 0
+
+    button.addEventListener(Event.EVENT_CLICK, () => {
+      if (status === 0) {
+        status = 1
+        button.props.name = '播 放'
+        cancelAnimationFrame(watchId)
+        clearInterval(birdFly)
+      } else if (status === 1) {
+        status = 0
+        button.props.name = '暂 停'
+        birdFly = fly()
+        run()
+      }
+    })
+
+    layout.attach(background)
+    layout.attach(land)
+    layout.attach(landHide)
+    layout.attach(pencil)
+    layout.attach(button)
+    layout.attach(bird)
+
+    hydra
+        .attach(layout)
+        .render()
+
+    let watchId = 0
+    const run = () => {
+      land.style.left--
+      pencil.style.left--
+      if (land.style.left === -land.style.width) {
+        land.style.left = land.style.width
+      }
+      landHide.style.left--
+      if (landHide.style.left === -landHide.style.width) {
+        landHide.style.left = land.style.width
+      }
+      watchId = requestAnimationFrame(() => run())
+    }
+    run()
+  }
 </script>
 <script>
-    const loader = new ImageLoader()
-    loader.resources(res)
-        .complete(() => main())
+  const loader = new ImageLoader()
+  loader.resources(res)
+      .complete(() => main())
 </script>
 </html>

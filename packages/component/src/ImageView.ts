@@ -1,10 +1,14 @@
 import View from '../../core/src/view/View'
 
 
-class ImageView extends View{
+class ImageView extends View {
     constructor (image: CanvasImageSource | string) {
         super()
         this._props.resource = image
+        this._props.imageX = 0
+        this._props.imageY = 0
+        this._props.imageWidth = null
+        this._props.imageHeight = null
     }
 
     public render (context: CanvasRenderingContext2D | null | undefined): void {
@@ -31,14 +35,27 @@ class ImageView extends View{
         }
     }
 
+    public cropImage (imageX: number, imageY: number, imageWidth: number, imageHeight: number): void {
+        this.props.imageX = imageX
+        this.props.imageY = imageY
+        this.props.imageWidth = imageWidth
+        this.props.imageHeight = imageHeight
+    }
+
     protected data (): any {
         return {
-            resource: null
+            resource: null,
+            imageX: null,
+            imageY: null,
+            imageWidth: null,
+            imageHeight: null
         }
     }
 
     private renderImage (ctx: CanvasRenderingContext2D, image: HTMLImageElement) {
-        ctx.drawImage(image, 0, 0, image.width, image.height,
+        ctx.drawImage(image, this.props.imageX, this.props.imageY,
+            this.props.imageWidth === null ? image.width : this.props.imageWidth,
+            this.props.imageHeight === null ? image.height : this.props.imageHeight,
             this._position.x, this._position.y, this._style.width, this._style.height)
     }
 }
