@@ -7,9 +7,9 @@ class ShadowView extends View {
     constructor () {
         super()
         this._status = 1
-        this.style.background = '#0bb6ff'
-        this.style.shadowColor = 'grey'
-        this.style.shadowBlur = 3
+        this._style.background = '#0bb6ff'
+        this._style.shadowColor = 'grey'
+        this._style.shadowBlur = 5
     }
 
 
@@ -22,7 +22,7 @@ class ShadowView extends View {
         this._status = 1
         this.animate({
             style: {
-                shadowBlur: 3,
+                shadowBlur: 5,
             },
             duration: 500
         })
@@ -40,7 +40,7 @@ class ShadowView extends View {
         super.onMouseEnter(event)
         this.animate({
             style: {
-                shadowBlur: 5,
+                shadowBlur: 8,
             },
             duration: 500
         })

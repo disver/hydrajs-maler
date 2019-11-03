@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hydra.js - AbsoluteLayout</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="root" style="width: 100%;height: 100%;"></div>
+</body>
+<script src="../../dist/bundle/hydra.es.js"></script>
+<!--suppress ES6ModulesDependencies, JSUndefinedPropertyAssignment -->
+<script>
+    const root = document.getElementById('root');
+    const hydra = new Hydra(root)
+    const layout = new DefaultLayout()
+    layout.style.width = root.offsetWidth
+    layout.style.height = root.offsetHeight
+
+    let y = layout.style.height / 2
+
+    const textEditor = new TextEditor()
+    textEditor.position.y = y
+    textEditor.position.x = layout.style.width / 2 - textEditor.style.width / 2
+    textEditor.style.borderWeight = 1
+    textEditor.style.borderColor = 'black'
+
+    const button = new Button()
+    button.props.name = 'Search'
+    button.style.width = 100
+    button.style.height = textEditor.style.height
+    button.style.background = '#e5e5e5'
+    button.style.fontColor = '#484848'
+    button.position.x = textEditor.position.x + textEditor.style.width + 10
+    button.position.y = textEditor.position.y
+
+    layout.attach(textEditor)
+    layout.attach(button)
+
+    hydra
+        .attach(layout)
+        .render()
+</script>
+</html>

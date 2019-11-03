@@ -89,7 +89,7 @@ class LinearLayout extends Layout{
         if (currentLine > 0) {
             const lastLine: View [] = viewsOfLine[currentLine - 1]
             let bottom = 0
-            let y = 0
+            let y = this.position.y
             for (const lastLineView of lastLine) {
                 if (this.boundsInRange(view, lastLineView)) {
                     if (y < lastLineView.style.height + lastLineView.position.y) {

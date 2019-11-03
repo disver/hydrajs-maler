@@ -1,4 +1,6 @@
 import {
+    AbsoluteLayout,
+    DefaultLayout,
     Event,
     LinearLayout,
     Position,
@@ -8,24 +10,39 @@ import {
 import {
     Hydra,
     HydraRenderer,
+    ImageLoader,
+    ImageResource,
+    Loader,
+    Resource,
     SampleEventDispatcher
 } from './engine'
 
 import {
     Button,
     ImageView,
-    ShadowView
+    ShadowView,
+    TextEditor
 } from './component'
+
+export {
+    Loader
+}
 
 export {
     Hydra,
     HydraRenderer,
     SampleEventDispatcher,
+    DefaultLayout,
+    TextEditor,
     Event,
     Button,
     ShadowView,
     ImageView,
+    AbsoluteLayout,
     LinearLayout,
     View,
+    Resource,
+    ImageResource,
+    ImageLoader,
     Position
 }

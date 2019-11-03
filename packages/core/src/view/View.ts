@@ -2,6 +2,7 @@
 import TWEEN from '@tweenjs/tween.js/dist/tween.esm.js'
 import DataProxy from '../../../engine/src/base/proxy/DataProxy'
 import Hydra from '../../../engine/src/Hydra'
+import {merge} from '../../../tools/Collections'
 import {uuid} from '../../../tools/UUID'
 import Event from '../event/Event'
 import EventReceiver from '../event/EventReceiver'
@@ -13,7 +14,7 @@ import Style from './base/Style'
 class View extends DataProxy implements Drawable, EventReceiver, AnimationSupport {
     public readonly _position: Position
     public readonly _style: Style
-    public readonly _props: any
+    public readonly _props: any = {}
     private _hydra: Hydra | null
     private _state: string
     private readonly _token: string
@@ -35,7 +36,7 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
         this._draggable = false
         this._token = uuid()
         this._registeredEvents = new Map<string, () => void>()
-        this._props = this.data()
+        this._props = merge(this._props, this.data())
         this.bindData()
     }
 
@@ -103,12 +104,12 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
 
 
     public onMouseEnter (event: Event): void {
-        console.log()
+        // overwrite onMouseEnter here
     }
 
 
     public onMouseLeave (event: Event): void {
-        console.log()
+        // overwrite onMouseLeave here
     }
 
 
@@ -230,6 +231,9 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
     }
 
     // noinspection JSMethodCanBeStatic
+    /**
+     * clear some styles after style has been filled
+     */
     public afterFill (context: CanvasRenderingContext2D) {
         context.lineWidth = 0
         context.strokeStyle = ''
@@ -274,6 +278,14 @@ class View extends DataProxy implements Drawable, EventReceiver, AnimationSuppor
         }
         this._proxies.style = new Proxy(this._style, handler)
         this._proxies.props = new Proxy(this._props, handler)
+        for (const key in this._props) {
+            if (this._props.hasOwnProperty(key)) {
+                const current = this._props[key]
+                if (Object.prototype.toString.call(current) === '[object Object]') {
+                    this._props[key] = new Proxy(current, handler)
+                }
+            }
+        }
         this._proxies.position = new Proxy(this._position, handler)
     }
 

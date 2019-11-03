@@ -75,6 +75,7 @@ class SampleEventDispatcher implements EventDispatcher {
                 dispatchEvent(Event.EVENT_MOUSE_UP, e)
             }
             canvas.onmousemove = e => dispatchEvent(Event.EVENT_MOUSE_MOVE, e)
+            // canvas.onkeyup = e => dispatchEvent(Event.EVENT_MOUSE_MOVE, e)
         }
     }
 

@@ -1,3 +1,4 @@
+import {sortView} from '../../../../tools/Collections'
 import Event from '../../event/Event'
 import View from '../../view/View'
 import Container from './Container'
@@ -37,7 +38,7 @@ abstract class Layout extends View implements Container {
 
 
     get children (): View[] {
-        return this._children.sort((left, right) => right.style.zIndex - left.style.zIndex)
+        return this._children.sort(sortView)
     }
 }
 

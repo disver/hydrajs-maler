@@ -35,6 +35,12 @@ class Style {
     private _borderColor: string
     private _borderWeight: number
 
+    // start bound
+    private _top: number | null
+    private _right: number | null
+    private _bottom: number | null
+    private _left: number | null
+
     constructor () {
         this._width = 0
         this._height = 0
@@ -58,6 +64,10 @@ class Style {
         this._fontFamily = 'Arial'
         this._borderColor = 'white'
         this._borderWeight = 0
+        this._top = null
+        this._right = null
+        this._bottom = null
+        this._left = null
     }
 
 
@@ -229,6 +239,38 @@ class Style {
 
     set fontFamily (value: string) {
         this._fontFamily = value
+    }
+
+    get top (): number | null {
+        return this._top
+    }
+
+    set top (value: number | null) {
+        this._top = value
+    }
+
+    get right (): number | null {
+        return this._right
+    }
+
+    set right (value: number | null) {
+        this._right = value
+    }
+
+    get bottom (): number | null {
+        return this._bottom
+    }
+
+    set bottom (value: number | null) {
+        this._bottom = value
+    }
+
+    get left (): number | null {
+        return this._left
+    }
+
+    set left (value: number | null) {
+        this._left = value
     }
 }
 

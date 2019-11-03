@@ -1,5 +1,6 @@
 import Container from '../../core/src/layout/base/Container'
 import View from '../../core/src/view/View'
+import {sortView} from '../../tools/Collections'
 import EventDispatcher from './base/EventDispatcher'
 import HydraRenderer from './renderer/HydraRenderer'
 import SampleEventDispatcher from './SampleEventDispatcher'
@@ -43,7 +44,7 @@ class Hydra implements Container{
         if (null != context) {
             // clear canvas to render new frame
             context.clearRect(0, 0, this._canvas.width, this._canvas.height)
-            const renderView = this._views.sort((leftView, rightView) => leftView.style.zIndex - rightView.style.zIndex)
+            const renderView = this._views.sort(sortView)
             for (const view of renderView) {
                 // render view to canvas
                 this._renderer.render(view, this)
@@ -67,8 +68,27 @@ class Hydra implements Container{
         if (canvas === null || canvas === undefined) {
             canvas = document.createElement('canvas')
         }
+        this.configHighDpiCanvas(canvas)
         return canvas
     }
+
+    // noinspection JSMethodCanBeStatic
+    /**
+     * configure high resolution for the canvas
+     */
+    private configHighDpiCanvas (canvas: HTMLCanvasElement) {
+        const dpr = window.devicePixelRatio
+        const { width: cssWidth, height: cssHeight } = canvas.getBoundingClientRect()
+        canvas.style.width = canvas.width + 'px'
+        canvas.style.height = canvas.height + 'px'
+        canvas.width = dpr * cssWidth
+        canvas.height = dpr * cssHeight
+        const context = canvas.getContext('2d')
+        if (context !== undefined && context !== null) {
+            context.scale(dpr, dpr)
+        }
+    }
 }
+
 
 export default Hydra
